@@ -68,19 +68,8 @@ export default function Preloader({ progress = 0 }) {
             <div className="absolute top-10 right-1/3 w-1/4 h-1/6 bg-gradient-to-tr from-orange-400/30 to-red-400/20 blur-2xl rounded-full opacity-30" />
           </div>
 
-          {dimension.width > 0 && (
-            <svg className="absolute top-0 w-[100%] h-[calc(100% + 200px)] z-10">
-              <motion.path
-                variants={curve}
-                initial="initial"
-                exit="exit"
-                fill="#09090C"
-              ></motion.path>
-            </svg>
-          )}
-
           <div className="mb-6 flex flex-col items-center z-20">
-            <span className="text-2xl font-bold bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 bg-clip-text text-transparent drop-shadow-[0_2px_24px_rgba(255,76,41,0.25)]">
+            <span className="text-6xl font-bold bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 bg-clip-text text-transparent drop-shadow-[0_2px_24px_rgba(255,76,41,0.25)]">
               Leonardo Fernandes
             </span>
             <span className="mt-2 text-lg text-[#F3F4F6] font-medium tracking-wide">

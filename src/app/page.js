@@ -1,13 +1,12 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import Preloader from '@/components/ui/preloader';
-import { AnimatePresence } from 'framer-motion';
+"use client";
+import React, { useState, useEffect } from "react";
+import Preloader from "@/components/ui/preloader";
+import { AnimatePresence } from "framer-motion";
 import Hero from "@/components/Hero";
 
-
 const assets = [
-  '/_next/static/media/Profile.jpeg',
-  // Add more image/font URLs here if needed
+  "/_next/static/media/Profile.jpeg",
+  "/_next/static/media/Leonardo.jpg",
 ];
 
 function preloadImage(src) {
@@ -26,7 +25,7 @@ export default function Home() {
   useEffect(() => {
     let isMounted = true;
     let loaded = 0;
-    const total = assets.length + 1; 
+    const total = assets.length + 1;
 
     const fontPromise = document.fonts
       ? document.fonts.ready.then(() => {

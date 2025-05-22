@@ -32,7 +32,7 @@ export default function SocialLinks() {
         className="
           flex gap-4
           items-center
-          mt-6
+          mt-3
         "
       >
         {links.map((link) => (

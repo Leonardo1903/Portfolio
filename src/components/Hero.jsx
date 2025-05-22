@@ -5,7 +5,6 @@ import SocialLinks from "@/components/SocialLinks";
 
 const typingTexts = [
   "Full Stack Engineer",
-
   "UI/UX Designer",
   "Web3 Developer",
   "Agentic-AI Developer",
@@ -51,6 +50,10 @@ export default function Hero() {
           <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
             Hi, I'm Leonardo Fernandes
           </h1>
+          <p className="text-lg text-gray-300 mb-4">
+            I'm a passionate software engineer with a knack for creating
+            innovative solutions.
+          </p>
           <span className="inline-block h-10 md:h-14">
             <span className="text-2xl md:text-3xl font-semibold bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 bg-clip-text text-transparent">
               {currentText}
