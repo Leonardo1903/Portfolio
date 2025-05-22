@@ -1,4 +1,3 @@
-import React from "react";
 import { Github, Linkedin, Twitter } from "lucide-react";
 import {
   Tooltip,
@@ -6,6 +5,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 
 const links = [
   {
@@ -28,41 +28,27 @@ const links = [
 export default function SocialLinks() {
   return (
     <TooltipProvider>
-      <div
-        className="
-          flex gap-4
-          items-center
-          mt-3
-        "
-      >
+      <div className="flex gap-4 items-center mt-3">
         {links.map((link) => (
           <Tooltip key={link.title}>
             <TooltipTrigger asChild>
-              <a
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group transition-colors"
-                aria-label={link.title}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full bg-black/70 border border-[#23232D] shadow-lg hover:bg-gradient-to-r hover:from-red-500/20 hover:to-amber-500/20 transition"
+                asChild
               >
-                <span
-                  className="
-                    flex items-center justify-center
-                    w-12 h-12
-                    rounded-full
-                    bg-black/70
-                    backdrop-blur-2xl
-                    border border-[#23232D]
-                    shadow-lg
-                    transition
-                    hover:scale-105
-                  "
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={link.title}
                 >
-                  <span className="transition-colors transform text-red-400 group-hover:text-white group-hover:scale-110">
+                  <span className="text-red-400 group-hover:text-white group-hover:scale-110 transition-colors">
                     {link.icon}
                   </span>
-                </span>
-              </a>
+                </a>
+              </Button>
             </TooltipTrigger>
             <TooltipContent
               side="top"

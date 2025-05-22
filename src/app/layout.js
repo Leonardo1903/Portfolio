@@ -15,10 +15,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${roboto.variable} antialiased`}>
+      <body className={`${roboto.variable} antialiased overflow-hidden`}>
         <div className="flex min-h-screen">
           <Navbar />
-          <main className="w-full md:w-3/4 min-h-screen">{children}</main>
+          <main className="w-full md:w-3/4 h-screen overflow-y-auto">
+            {children}
+          </main>
         </div>
       </body>
     </html>

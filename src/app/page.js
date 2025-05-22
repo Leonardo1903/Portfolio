@@ -1,8 +1,14 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Preloader from "@/components/ui/preloader";
 import { AnimatePresence } from "framer-motion";
 import Hero from "@/components/Hero";
+import About from "@/components/About";
+import Experience from "@/components/Experience";
+import Projects from "@/components/Projects";
+import Services from "@/components/Services";
+// import Testimonials from "@/components/Testimonials";
+import Contact from "@/components/Contact";
 
 const assets = [
   "/_next/static/media/Profile.jpeg",
@@ -59,7 +65,31 @@ export default function Home() {
       <AnimatePresence mode="wait">
         {loader && <Preloader progress={progress} />}
       </AnimatePresence>
-      {!loader && <Hero />}
+      {!loader && (
+        <>
+          <section id="home">
+            <Hero />
+          </section>
+          <section id="services">
+            <Services />
+          </section>
+          <section id="about">
+            <About />
+          </section>
+          <section id="experience">
+            <Experience />
+          </section>
+          <section id="projects">
+            <Projects />
+          </section>
+          {/* <section id="testimonials">
+            <Testimonials />
+          </section> */}
+          <section id="contact">
+            <Contact />
+          </section>
+        </>
+      )}
     </>
   );
 }
