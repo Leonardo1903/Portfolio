@@ -1,6 +1,4 @@
 import { motion } from "framer-motion";
-// import Profile from "@/assets/Profile.jpeg";
-import Leonardo from "@/assets/Leonardo.jpg"
 import Image from "next/image";
 
 const blobShapes1 = [
@@ -150,7 +148,7 @@ export default function Blob() {
       <div className="relative z-10 flex items-center justify-center">
         <div className="relative">
           <Image
-            src={Leonardo}
+            src="/Leonardo.jpg"
             alt="Profile"
             width={400}
             height={400}

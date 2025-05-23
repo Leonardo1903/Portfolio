@@ -11,8 +11,13 @@ import Services from "@/components/Services";
 import Contact from "@/components/Contact";
 
 const assets = [
-  "/_next/static/media/Profile.jpeg",
-  "/_next/static/media/Leonardo.jpg",
+  "/Profile.jpeg",
+  "/Leonardo.jpg",
+  "/EchoVault.png",
+  "/QuikNote.png",
+  "/ClipIt.png",
+  "/Concise.png",
+  "/Resume.pdf",
 ];
 
 function preloadImage(src) {

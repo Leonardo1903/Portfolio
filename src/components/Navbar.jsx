@@ -14,7 +14,6 @@ import {
   ExternalLink,
   Layers,
 } from "lucide-react";
-import Profile from "@/assets/Profile.jpeg";
 import AnimatedHamburgerButton from "@/components/AnimatedHamburgerButton";
 
 const navItems = [
@@ -109,10 +108,7 @@ export default function Navbar() {
               </div>
               <div className="flex flex-col items-center justify-center py-10 z-10">
                 <Avatar className="mb-4 w-10 h-10">
-                  <AvatarImage
-                    src={Profile.src ? Profile.src : Profile}
-                    alt="Leonardo Fernandes"
-                  />
+                  <AvatarImage src="/Profile.jpeg" alt="Leonardo Fernandes" />
                   <AvatarFallback>LF</AvatarFallback>
                 </Avatar>
                 <h1 className={`text-2xl font-bold ${gradientText}`}>
@@ -165,10 +161,7 @@ export default function Navbar() {
         </div>
         <div className="flex flex-col items-center justify-center py-10 z-10">
           <Avatar className="mb-4 w-10 h-10">
-            <AvatarImage
-              src={Profile.src ? Profile.src : Profile}
-              alt="Leonardo Fernandes"
-            />
+            <AvatarImage src="/Profile.jpeg" alt="Leonardo Fernandes" />
             <AvatarFallback>LF</AvatarFallback>
           </Avatar>
           <h1 className={`text-2xl font-bold ${gradientText}`}>
