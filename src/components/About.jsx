@@ -1,8 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
 import { Code, Cpu, Database, Globe, Layers, Palette } from "lucide-react";
-import Image from "next/image";
-
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -26,17 +24,23 @@ const skillCategories = [
   {
     title: "Languages",
     icon: <Code className="w-6 h-6 text-amber-400" />,
-    skills: ["JavaScript/TypeScript", "C++", "Python", "Solidity", "Rust"],
+    skills: ["JavaScript / TypeScript", "C++", "Python", "Solidity", "Rust"],
   },
   {
     title: "Frontend",
     icon: <Palette className="w-6 h-6 text-red-400" />,
-    skills: ["React", "Next.js", "Redux", "Tailwind CSS", "Framer Motion"],
+    skills: [
+      "React.js / Next.js",
+      "React-Native / Expo",
+      "Redux",
+      "Tailwind CSS",
+      "Framer Motion",
+    ],
   },
   {
     title: "Backend",
     icon: <Database className="w-6 h-6 text-orange-400" />,
-    skills: ["Node.js", "Express", "MongoDB", "PostgreSQL", "Appwrite"],
+    skills: ["Node.js", "Express.js", "MongoDB", "PostgreSQL", "Appwrite"],
   },
   {
     title: "DevOps",
@@ -52,7 +56,7 @@ const skillCategories = [
     title: "AI-Agents",
     icon: <Cpu className="w-6 h-6 text-red-400" />,
     skills: [
-      "OpenAI/Gemini API",
+      "OpenAI / Gemini API",
       "LangChain",
       "Langraph",
       "Langsmith",
@@ -98,22 +102,14 @@ export default function About() {
             className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/10 max-w-2xl w-full text-center"
           >
             <h3 className="text-2xl font-semibold text-white mb-6">Who I Am</h3>
-            <p className="text-gray-300 mb-4">
-              I'm a passionate Full Stack Engineer with expertise in modern web
-              technologies, Web3, and AI development. With a strong foundation
-              in both frontend and backend development, I create seamless,
-              user-centric applications that solve real-world problems.
-            </p>
-            <p className="text-gray-300 mb-4">
-              My journey in software development began 5 years ago, and since
-              then, I've worked on a diverse range of projects from e-commerce
-              platforms to decentralized applications. I'm constantly exploring
-              new technologies and methodologies to enhance my skill set.
-            </p>
             <p className="text-gray-300">
-              When I'm not coding, you can find me contributing to open-source
-              projects, writing technical articles, or exploring the latest
-              advancements in blockchain and artificial intelligence.
+              I am a passionate software engineer with a strong focus on
+              building innovative solutions. My expertise lies in web
+              development, app development, Web3 and AI agents. I thrive on
+              challenges and enjoy learning new technologies to enhance my
+              skills. I am always eager to collaborate with others and
+              contribute to exciting projects. My goal is to create impactful
+              applications that make a difference in people's lives.
             </p>
           </motion.div>
         </div>
