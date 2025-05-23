@@ -25,7 +25,7 @@ const navItems = [
   { title: "Projects", url: "#projects", icon: Folder },
   {
     title: "Blog",
-    url: "https://leonardo1903.hashnode.dev/",
+    url: "https://blog.leonardo1903.me/",
     icon: SquarePen,
     external: true,
   },

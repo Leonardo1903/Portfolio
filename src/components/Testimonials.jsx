@@ -81,7 +81,6 @@ export default function Testimonials() {
 
   return (
     <div className="w-full min-h-screen bg-[#09090C] py-16 px-4 md:px-8 relative overflow-hidden">
-      {/* Background elements */}
       <div className="pointer-events-none absolute inset-0 z-0">
         <div className="absolute inset-0 bg-black/70 backdrop-blur-2xl" />
         <div className="absolute top-1/4 right-1/4 w-1/2 h-1/3 bg-gradient-to-r from-red-400/20 via-orange-400/10 to-amber-400/10 blur-3xl rounded-full opacity-40" />
@@ -114,7 +113,6 @@ export default function Testimonials() {
           </motion.p>
         </motion.div>
 
-        {/* Desktop Testimonials Grid */}
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -174,7 +172,6 @@ export default function Testimonials() {
           ))}
         </motion.div>
 
-        {/* Mobile Testimonial Carousel */}
         <div className="md:hidden">
           <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/10">
             <div className="flex items-start mb-4">

@@ -1,7 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
 import { Mail, MapPin, Phone, Send } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import emailjs from "@emailjs/browser";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -23,6 +24,7 @@ const staggerContainer = {
 };
 
 export default function Contact() {
+  const formRef = useRef(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -32,6 +34,7 @@ export default function Contact() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,16 +44,32 @@ export default function Contact() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError("");
 
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitSuccess(true);
-      setFormData({ name: "", email: "", subject: "", message: "" });
+    if (formRef.current) {
+      emailjs
+        .sendForm(
+          process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "",
+          process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "",
+          formRef.current,
+          process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || ""
+        )
+        .then((result) => {
+          console.log("Email sent successfully:", result.text);
+          setIsSubmitting(false);
+          setSubmitSuccess(true);
+          setFormData({ name: "", email: "", subject: "", message: "" });
 
-      setTimeout(() => {
-        setSubmitSuccess(false);
-      }, 5000);
-    }, 1500);
+          setTimeout(() => {
+            setSubmitSuccess(false);
+          }, 5000);
+        })
+        .catch((error) => {
+          console.error("Error sending email:", error);
+          setIsSubmitting(false);
+          setSubmitError("Failed to send message. Please try again later.");
+        });
+    }
   };
 
   return (
@@ -123,7 +142,7 @@ export default function Contact() {
                 <div>
                   <h4 className="text-white font-medium mb-1">Email</h4>
                   <a
-                    href="mailto:contact@leonardofernandes.com"
+                    href="mailto:leonardofernandes3419@gmail.com"
                     className="text-gray-300 hover:text-red-400 transition-colors"
                   >
                     leonardofernandes3419@gmail.com
@@ -138,7 +157,7 @@ export default function Contact() {
                 <div>
                   <h4 className="text-white font-medium mb-1">Phone</h4>
                   <a
-                    href="tel:+14155552671"
+                    href="tel:+919820143533"
                     className="text-gray-300 hover:text-red-400 transition-colors"
                   >
                     +91 9820143533
@@ -155,6 +174,7 @@ export default function Contact() {
             variants={fadeIn}
           >
             <form
+              ref={formRef}
               onSubmit={handleSubmit}
               className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/10"
             >
@@ -276,6 +296,12 @@ export default function Contact() {
                 <div className="mt-4 p-3 bg-green-500/20 border border-green-500/50 rounded-lg text-green-400 text-sm">
                   Your message has been sent successfully! I'll get back to you
                   soon.
+                </div>
+              )}
+
+              {submitError && (
+                <div className="mt-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm">
+                  {submitError}
                 </div>
               )}
             </form>
