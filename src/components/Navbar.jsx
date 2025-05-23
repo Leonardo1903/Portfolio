@@ -1,11 +1,21 @@
-"use client"
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Home, Folder, Briefcase, Mail, User, SquarePen, Download, Calendar, Star, Layers } from "lucide-react"
-import Profile from "@/assets/Profile.jpeg"
-import AnimatedHamburgerButton from "@/components/AnimatedHamburgerButton"
+"use client";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import {
+  Home,
+  Folder,
+  Briefcase,
+  Mail,
+  User,
+  SquarePen,
+  Download,
+  ExternalLink,
+  Layers,
+} from "lucide-react";
+import Profile from "@/assets/Profile.jpeg";
+import AnimatedHamburgerButton from "@/components/AnimatedHamburgerButton";
 
 const navItems = [
   { title: "Home", url: "#home", icon: Home },
@@ -13,69 +23,81 @@ const navItems = [
   { title: "About", url: "#about", icon: User },
   { title: "Experience", url: "#experience", icon: Briefcase },
   { title: "Projects", url: "#projects", icon: Folder },
-  { title: "Blog", url: "#blog", icon: SquarePen },
+  {
+    title: "Blog",
+    url: "https://leonardo1903.hashnode.dev/",
+    icon: SquarePen,
+    external: true,
+  },
   { title: "Contact", url: "#contact", icon: Mail },
-]
+];
 
 export default function Navbar() {
-  const [openMobile, setOpenMobile] = useState(false)
-  const [activeSection, setActiveSection] = useState("home")
+  const [openMobile, setOpenMobile] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
 
   const scrollToSection = (sectionId) => {
-    setOpenMobile(false)
-    const section = document.getElementById(sectionId)
+    setOpenMobile(false);
+    const section = document.getElementById(sectionId);
     if (section) {
-      const mainContent = document.querySelector("main")
+      const mainContent = document.querySelector("main");
       if (mainContent) {
         mainContent.scrollTo({
           top: section.offsetTop,
           behavior: "smooth",
-        })
+        });
       }
     }
-  }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
-      const mainContent = document.querySelector("main")
-      if (!mainContent) return
+      const mainContent = document.querySelector("main");
+      if (!mainContent) return;
 
-      const scrollPosition = mainContent.scrollTop
+      const scrollPosition = mainContent.scrollTop;
 
-      const sections = document.querySelectorAll("section[id]")
+      const sections = document.querySelectorAll("section[id]");
       sections.forEach((section) => {
-        const sectionTop = section.offsetTop
-        const sectionHeight = section.offsetHeight
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
 
-        if (scrollPosition >= sectionTop - 100 && scrollPosition < sectionTop + sectionHeight - 100) {
-          setActiveSection(section.getAttribute("id"))
+        if (
+          scrollPosition >= sectionTop - 100 &&
+          scrollPosition < sectionTop + sectionHeight - 100
+        ) {
+          setActiveSection(section.getAttribute("id"));
         }
-      })
-    }
+      });
+    };
 
-    const mainContent = document.querySelector("main")
+    const mainContent = document.querySelector("main");
     if (mainContent) {
-      mainContent.addEventListener("scroll", handleScroll)
+      mainContent.addEventListener("scroll", handleScroll);
     }
 
     return () => {
       if (mainContent) {
-        mainContent.removeEventListener("scroll", handleScroll)
+        mainContent.removeEventListener("scroll", handleScroll);
       }
-    }
-  }, [])
+    };
+  }, []);
 
   const gradientText =
-    "bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 bg-clip-text text-transparent drop-shadow-[0_2px_24px_rgba(255,76,41,0.25)]"
-  const gradientNavItem = "hover:bg-gradient-to-r hover:from-red-500/20 hover:to-amber-500/20 hover:text-red-400"
+    "bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 bg-clip-text text-transparent drop-shadow-[0_2px_24px_rgba(255,76,41,0.25)]";
+  const gradientNavItem =
+    "hover:bg-gradient-to-r hover:from-red-500/20 hover:to-amber-500/20 hover:text-red-400";
   const gradientButton =
-    "px-6 py-3 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 text-white rounded-3xl shadow-lg transition duration-300"
+    "px-6 py-3 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 text-white rounded-3xl shadow-lg transition duration-300";
 
   return (
     <>
       <div className="md:hidden">
         <div className="fixed top-4 right-4 z-50">
-          <AnimatedHamburgerButton active={openMobile} onClick={() => setOpenMobile((prev) => !prev)} />
+          <AnimatedHamburgerButton
+            active={openMobile}
+            onClick={() => setOpenMobile((prev) => !prev)}
+          />
         </div>
         {openMobile && (
           <div className="fixed inset-0 z-40 flex">
@@ -87,10 +109,15 @@ export default function Navbar() {
               </div>
               <div className="flex flex-col items-center justify-center py-10 z-10">
                 <Avatar className="mb-4 w-10 h-10">
-                  <AvatarImage src={Profile.src ? Profile.src : Profile} alt="Leonardo Fernandes" />
+                  <AvatarImage
+                    src={Profile.src ? Profile.src : Profile}
+                    alt="Leonardo Fernandes"
+                  />
                   <AvatarFallback>LF</AvatarFallback>
                 </Avatar>
-                <h1 className={`text-2xl font-bold ${gradientText}`}>Leonardo Fernandes</h1>
+                <h1 className={`text-2xl font-bold ${gradientText}`}>
+                  Leonardo Fernandes
+                </h1>
               </div>
               <Separator />
               <div className="flex flex-col items-center space-y-4 w-full mt-8 z-10 max-h-[60vh] overflow-y-auto">
@@ -122,7 +149,10 @@ export default function Navbar() {
                 </Button>
               </div>
             </nav>
-            <div className="flex-1 bg-black/60 backdrop-blur-sm" onClick={() => setOpenMobile(false)} />
+            <div
+              className="flex-1 bg-black/60 backdrop-blur-sm"
+              onClick={() => setOpenMobile(false)}
+            />
           </div>
         )}
       </div>
@@ -135,25 +165,43 @@ export default function Navbar() {
         </div>
         <div className="flex flex-col items-center justify-center py-10 z-10">
           <Avatar className="mb-4 w-10 h-10">
-            <AvatarImage src={Profile.src ? Profile.src : Profile} alt="Leonardo Fernandes" />
+            <AvatarImage
+              src={Profile.src ? Profile.src : Profile}
+              alt="Leonardo Fernandes"
+            />
             <AvatarFallback>LF</AvatarFallback>
           </Avatar>
-          <h1 className={`text-2xl font-bold ${gradientText}`}>Leonardo Fernandes</h1>
+          <h1 className={`text-2xl font-bold ${gradientText}`}>
+            Leonardo Fernandes
+          </h1>
         </div>
         <Separator />
         <div className="flex flex-col items-center space-y-4 w-full mt-8 z-10 max-h-[60vh] overflow-y-auto">
-          {navItems.map(({ title, url, icon: Icon }) => (
+          {navItems.map(({ title, url, icon: Icon, external }) => (
             <button
               key={title}
-              onClick={() => scrollToSection(url.substring(1))}
+              onClick={() => {
+                if (external) {
+                  window.open(url, "_blank", "noopener,noreferrer");
+                  setOpenMobile(false);
+                } else {
+                  scrollToSection(url.substring(1));
+                }
+              }}
               className={`flex items-center justify-start w-4/5 p-2 text-[#F3F4F6] rounded-md transition ${gradientNavItem} ${
                 activeSection === url.substring(1)
                   ? "bg-gradient-to-r from-red-500/20 to-amber-500/20 text-red-400"
                   : ""
-              }`}
+              } group`}
             >
               <Icon className="w-5 h-5 mr-3 text-red-400" />
               <span className="text-base">{title}</span>
+              {external && (
+                <ExternalLink
+                  className="w-4 h-4 ml-2 text-orange-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                  aria-label="External link"
+                />
+              )}
             </button>
           ))}
         </div>
@@ -170,5 +218,5 @@ export default function Navbar() {
         </div>
       </nav>
     </>
-  )
+  );
 }

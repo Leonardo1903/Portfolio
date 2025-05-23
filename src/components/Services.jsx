@@ -128,8 +128,7 @@ export default function Services() {
             className="text-gray-300 max-w-2xl mx-auto"
           >
             I offer a range of services to help businesses and individuals
-            achieve their digital goals. Each service is customized to meet your
-            specific needs and requirements.
+            achieve their digital goals.
           </motion.p>
         </motion.div>
 

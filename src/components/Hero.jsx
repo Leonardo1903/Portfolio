@@ -121,18 +121,6 @@ export default function Hero() {
     return cleanup;
   }, [charIndex, typing, currentIndex]);
 
-  const scrollToContact = () => {
-    const contactSection = document.getElementById("contact");
-    if (contactSection) {
-      const mainContent = document.querySelector("main");
-      if (mainContent) {
-        mainContent.scrollTo({
-          top: contactSection.offsetTop,
-          behavior: "smooth",
-        });
-      }
-    }
-  };
 
   return (
     <div className="w-full min-h-screen flex items-center bg-[#09090C] relative overflow-hidden">
@@ -170,31 +158,6 @@ export default function Hero() {
               </span>
             </span>
           </motion.div>
-
-          <motion.div
-            initial={{
-              opacity: 0,
-              y: 20,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              delay: 0.6,
-              duration: 0.6,
-            }}
-            className="flex flex-col sm:flex-row gap-4 w-full md:w-auto mt-2"
-          >
-            <button
-              onClick={scrollToContact}
-              className="px-6 py-3 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 text-white rounded-xl shadow-lg transition duration-300 flex items-center justify-center"
-            >
-              Hire Me
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </button>
-          </motion.div>
-
           <div className="w-full flex justify-center md:justify-start mt-6">
             <SocialLinks />
           </div>

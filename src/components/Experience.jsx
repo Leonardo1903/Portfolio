@@ -24,16 +24,17 @@ const staggerContainer = {
 
 const experiences = [
   {
-    title: "Senior Full Stack Engineer",
-    company: "TechNova Solutions",
-    location: "San Francisco, CA",
-    period: "2022 - Present",
+    title: "SDE Intern",
+    company: "myresQR.life · Internship",
+    location: "India · Remote",
+    period: "Nov 2024 - Feb 2025 · 4 mos",
     description:
-      "Leading the development of a next-generation SaaS platform using Next.js, TypeScript, and AWS. Implemented CI/CD pipelines and mentored junior developers.",
+      "As a Software Development Engineer (SDE) intern at myresQR.life, I focused on enhancing the company's digital platforms. My work involved frontend development using JavaScript, React.js, Tailwind CSS, ShadCN, Recoil, and Axios. I developed and managed the admin portal, dealer portal, post-scan portal, user registration system, and main website.",
     achievements: [
-      "Reduced page load time by 40% through performance optimizations",
-      "Implemented a microservices architecture that improved scalability",
-      "Led a team of 5 developers to deliver projects on time and within budget",
+      "Sharpened frontend programming abilities and gained a thorough understanding of building user-focused web applications",
+      "Developed and managed the admin portal, dealer portal, post-scan portal, user registration system, and main website",
+      "Implemented state management with Recoil and efficient API handling with Axios",
+      "Enhanced UI/UX using Tailwind CSS and ShadCN components",
     ],
   },
 ];
@@ -47,10 +48,25 @@ const education = [
     description:
       "Focused on software engineering, algorithms, and distributed systems. Graduated with honors.",
     achievements: [
-      "Dean’s List all semesters",
-      "President of the Coding Club",
-      "Capstone project on scalable web architectures",
+      "Part of the Technical Team for AdVITya'25",
+      "Technical Co-Lead for Blockchain Club VITB",
     ],
+  },
+  {
+    degree: "XII ",
+    school: "Pace Junior Science College",
+    location: "Mumbai, Maharashtra",
+    period: "2020 - 2022",
+    description:
+      "Completed higher secondary education with a focus on science and mathematics. ",
+  },
+  {
+    degree: "X ",
+    school: "Vibgyor High School",
+    location: "Mumbai, Maharashtra",
+    period: "2010 - 2020",
+    description:
+      "Completed schooling with a focus on science and mathematics. ",
   },
 ];
 
@@ -86,6 +102,7 @@ export default function Experience() {
           <TabsList className="mx-auto mb-8 flex justify-center gap-2 bg-white/5 backdrop-blur-xl">
             <TabsTrigger
               value="experience"
+              a
               className="text-lg font-semibold px-6 py-2 rounded-lg transition
       bg-white/10 backdrop-blur-md text-white
       data-[state=active]:bg-white/20
@@ -123,6 +140,7 @@ export default function Experience() {
                     exp={exp}
                     fadeIn={fadeIn}
                     index={index}
+                    align={index % 2 === 0 ? "right" : "left"}
                   />
                 ))}
               </motion.div>
@@ -151,6 +169,7 @@ export default function Experience() {
                     }}
                     fadeIn={fadeIn}
                     index={index}
+                    align={index % 2 === 0 ? "left" : "right"}
                   />
                 ))}
               </motion.div>
