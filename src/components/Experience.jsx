@@ -102,7 +102,6 @@ export default function Experience() {
           <TabsList className="mx-auto mb-8 flex justify-center gap-2 bg-white/5 backdrop-blur-xl">
             <TabsTrigger
               value="experience"
-              a
               className="text-lg font-semibold px-6 py-2 rounded-lg transition
       bg-white/10 backdrop-blur-md text-white
       data-[state=active]:bg-white/20

@@ -1,4 +1,5 @@
 "use client"
+import { useState } from "react"
 import { motion } from "framer-motion"
 import { ExternalLink, Github } from "lucide-react"
 import Image from "next/image"
@@ -22,6 +23,7 @@ const staggerContainer = {
   },
 }
 
+// Add a 'category' property to each project
 const projects = [
   {
     title: "DeFi Dashboard",
@@ -31,6 +33,7 @@ const projects = [
     tags: ["React", "Ethers.js", "TailwindCSS", "The Graph"],
     github: "https://github.com/username/defi-dashboard",
     demo: "https://defi-dashboard.example.com",
+    category: "web3",
   },
   {
     title: "AI Content Generator",
@@ -40,6 +43,7 @@ const projects = [
     tags: ["Next.js", "OpenAI API", "MongoDB", "Framer Motion"],
     github: "https://github.com/username/ai-content-generator",
     demo: "https://ai-content.example.com",
+    category: "agenticAi",
   },
   {
     title: "NFT Marketplace",
@@ -49,6 +53,7 @@ const projects = [
     tags: ["React", "Solidity", "IPFS", "Hardhat"],
     github: "https://github.com/username/nft-marketplace",
     demo: "https://nft-market.example.com",
+    category: "web3",
   },
   {
     title: "E-commerce Platform",
@@ -58,6 +63,7 @@ const projects = [
     tags: ["Next.js", "Stripe", "PostgreSQL", "Redux"],
     github: "https://github.com/username/ecommerce-platform",
     demo: "https://shop.example.com",
+    category: "webdev",
   },
   {
     title: "Task Management App",
@@ -67,6 +73,7 @@ const projects = [
     tags: ["React", "Firebase", "TailwindCSS", "Redux"],
     github: "https://github.com/username/task-management",
     demo: "https://tasks.example.com",
+    category: "appdev",
   },
   {
     title: "Portfolio Website",
@@ -76,13 +83,29 @@ const projects = [
     tags: ["Next.js", "Framer Motion", "TailwindCSS", "Vercel"],
     github: "https://github.com/username/portfolio",
     demo: "https://portfolio.example.com",
+    category: "webdev",
   },
 ]
 
+const FILTERS = [
+  { label: "All Projects", value: "all" },
+  { label: "WebDev", value: "webdev" },
+  { label: "AppDev", value: "appdev" },
+  { label: "Web3", value: "web3" },
+  { label: "AgenticAI", value: "agenticAi" },
+]
+
 export default function Projects() {
+  const [selected, setSelected] = useState("all")
+
+  // Filter projects based on selected filter
+  const filteredProjects =
+    selected === "all"
+      ? projects
+      : projects.filter((p) => p.category === selected)
+
   return (
     <div className="w-full min-h-screen bg-[#09090C] py-16 px-4 md:px-8 relative overflow-hidden">
-      {/* Background elements */}
       <div className="pointer-events-none absolute inset-0 z-0">
         <div className="absolute inset-0 bg-black/70 backdrop-blur-2xl" />
         <div className="absolute top-1/4 left-1/3 w-1/2 h-1/3 bg-gradient-to-r from-red-400/20 via-orange-400/10 to-amber-400/10 blur-3xl rounded-full opacity-40" />
@@ -111,6 +134,25 @@ export default function Projects() {
           </motion.p>
         </motion.div>
 
+        {/* Filter Buttons */}
+        <div className="flex flex-wrap justify-center gap-4 mb-10">
+          {FILTERS.map((filter) => (
+            <button
+              key={filter.value}
+              onClick={() => setSelected(filter.value)}
+              className={`px-4 py-2 rounded-full border transition-all duration-200 text-sm font-medium
+                ${
+                  selected === filter.value
+                    ? "bg-gradient-to-r from-red-400 to-amber-400 text-white border-red-400"
+                    : "bg-black/30 text-gray-300 border-white/10 hover:border-red-400/50"
+                }
+              `}
+            >
+              {filter.label}
+            </button>
+          ))}
+        </div>
+
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -118,9 +160,9 @@ export default function Projects() {
           variants={staggerContainer}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          {projects.map((project, index) => (
+          {filteredProjects.map((project) => (
             <motion.div
-              key={index}
+              key={project.title}
               variants={fadeIn}
               className="bg-white/5 backdrop-blur-xl rounded-2xl overflow-hidden shadow-lg border border-white/10 hover:border-red-400/50 transition-all duration-300 hover:shadow-red-400/20 hover:shadow-lg group"
             >
