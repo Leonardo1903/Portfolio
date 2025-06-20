@@ -24,24 +24,6 @@ const staggerContainer = {
 
 const projects = [
   {
-    title: "EchoVault",
-    description:
-      "An anonymous feedback platform designed to foster open communication and collaboration. It allows users to send and receive anonymous messages, leveraging AI-generated suggestions to enhance engagement.",
-    image: "/EchoVault.png",
-    tags: ["Nextjs", "Authjs", "TailwindCSS", "MongoDB"],
-    github: "https://github.com/Leonardo1903/EchoVault",
-    demo: "https://echovault.leonardo1903.me/",
-  },
-  {
-    title: "QuikNote",
-    description:
-      "A full-stack sticky notes application designed to provide users with a seamless and intuitive note-taking experience. It allows users to securely authenticate, create, organize, and manage their notes with advanced features like drag-and-drop functionality and personalized dashboards.",
-    image: "/QuikNote.png",
-    tags: ["React.Js", "TailwindCSS", "Appwrite", "Framer Motion"],
-    github: "https://github.com/Leonardo1903/QuikNote",
-    demo: "https://quiknote.leonardo1903.me/",
-  },
-  {
     title: "Concise",
     description:
       "A web application and Chrome extension designed to help users quickly summarize articles by providing a URL. It streamlines the process of extracting key information from lengthy articles, making content consumption more efficient and accessible.",
@@ -51,31 +33,31 @@ const projects = [
     demo: "https://concise.leonardo1903.me/",
   },
   {
-    title: "ClipIt",
+    title: "QuikNote",
     description:
-      "A full-stack URL shortener application designed to simplify the process of creating, managing, and analyzing shortened URLs. It provides a user-friendly interface for generating short links, sharing them, and tracking their performance through detailed analytics.",
-    image: "/ClipIt.png",
-    tags: ["ReactJs", "TailwindCSS", "Supabase", "Shadcn-UI"],
-    github: "https://github.com/Leonardo1903/ClipIt",
-    demo: "https://clipit.leonardo1903.me/",
+      "A full-stack sticky notes application allowing users to securely authenticate, create, organize, and manage their notes with advanced features like drag-and-drop functionality and personalized dashboards.",
+    image: "/QuikNote.png",
+    tags: ["React.Js", "TailwindCSS", "Appwrite", "Framer Motion"],
+    github: "https://github.com/Leonardo1903/QuikNote",
+    demo: "https://quiknote.leonardo1903.me/",
+  },
+  {
+    title: "EchoVault",
+    description:
+      "An anonymous feedback platform designed to foster open communication and collaboration. It allows users to send and receive anonymous messages, leveraging AI-generated suggestions to enhance engagement.",
+    image: "/EchoVault.png",
+    tags: ["Nextjs", "Authjs", "TailwindCSS", "MongoDB"],
+    github: "https://github.com/Leonardo1903/EchoVault",
+    demo: "https://echovault.leonardo1903.me/",
   },
   // {
   //   title: "PropertyPulse",
   //   description:
   //     "A collaborative task management application with real-time updates, team workspaces, and productivity analytics.",
   //   image: "/placeholder.svg?height=600&width=800",
-  //   tags: ["React", "Firebase", "TailwindCSS", "Redux"],
+  //   tags: ["React", "Nodejs", "TailwindCSS", "Redux", "Expressjs", "MongoDB"],
   //   github: "https://github.com/username/task-management",
   //   demo: "https://tasks.example.com",
-  // },
-  // {
-  //   title: "Portfolio Website",
-  //   description:
-  //     "A modern, responsive portfolio website showcasing projects and skills with animations and interactive elements.",
-  //   image: "/placeholder.svg?height=600&width=800",
-  //   tags: ["Next.js", "Framer Motion", "TailwindCSS", "Vercel"],
-  //   github: "https://github.com/username/portfolio",
-  //   demo: "https://portfolio.example.com",
   // },
 ];
 
