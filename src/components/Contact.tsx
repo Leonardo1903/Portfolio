@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { Mail, MapPin, Phone, Send } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, ChangeEvent, FormEvent } from "react";
 import emailjs from "@emailjs/browser";
 
 const fadeIn = {
@@ -23,25 +23,32 @@ const staggerContainer = {
   },
 };
 
+interface FormData {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
 export default function Contact() {
-  const formRef = useRef(null);
-  const [formData, setFormData] = useState({
+  const formRef = useRef<HTMLFormElement>(null);
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
     subject: "",
     message: "",
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [submitError, setSubmitError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
+  const [submitError, setSubmitError] = useState<string>("");
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev: FormData) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitError("");
@@ -119,7 +126,7 @@ export default function Contact() {
                 Contact Information
               </h3>
               <p className="text-gray-300 mb-8">
-                I'm always open to discussing new projects, creative ideas, or
+                I&apos;m always open to discussing new projects, creative ideas, or
                 opportunities to be part of your vision.
               </p>
             </motion.div>
@@ -294,7 +301,7 @@ export default function Contact() {
 
               {submitSuccess && (
                 <div className="mt-4 p-3 bg-green-500/20 border border-green-500/50 rounded-lg text-green-400 text-sm">
-                  Your message has been sent successfully! I'll get back to you
+                  Your message has been sent successfully! I&apos;ll get back to you
                   soon.
                 </div>
               )}

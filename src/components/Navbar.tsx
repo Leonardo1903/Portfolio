@@ -13,12 +13,19 @@ import {
   Download,
   ExternalLink,
   Layers,
+  LucideIcon,
 } from "lucide-react";
 import AnimatedHamburgerButton from "@/components/AnimatedHamburgerButton";
 
-const navItems = [
+interface NavItem {
+  title: string;
+  url: string;
+  icon: LucideIcon;
+  external?: boolean;
+}
+
+const navItems: NavItem[] = [
   { title: "Home", url: "#home", icon: Home },
-  { title: "Services", url: "#services", icon: Layers },
   { title: "About", url: "#about", icon: User },
   { title: "Experience", url: "#experience", icon: Briefcase },
   { title: "Projects", url: "#projects", icon: Folder },
@@ -32,10 +39,10 @@ const navItems = [
 ];
 
 export default function Navbar() {
-  const [openMobile, setOpenMobile] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
+  const [openMobile, setOpenMobile] = useState<boolean>(false);
+  const [activeSection, setActiveSection] = useState<string>("home");
 
-  const scrollToSection = (sectionId) => {
+  const scrollToSection = (sectionId: string): void => {
     setOpenMobile(false);
     const section = document.getElementById(sectionId);
     if (section) {
@@ -50,7 +57,7 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = (): void => {
       const mainContent = document.querySelector("main");
       if (!mainContent) return;
 
@@ -58,14 +65,17 @@ export default function Navbar() {
 
       const sections = document.querySelectorAll("section[id]");
       sections.forEach((section) => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.offsetHeight;
+        const sectionTop = (section as HTMLElement).offsetTop;
+        const sectionHeight = (section as HTMLElement).offsetHeight;
 
         if (
           scrollPosition >= sectionTop - 100 &&
           scrollPosition < sectionTop + sectionHeight - 100
         ) {
-          setActiveSection(section.getAttribute("id"));
+          const sectionId = section.getAttribute("id");
+          if (sectionId) {
+            setActiveSection(sectionId);
+          }
         }
       });
     };
@@ -82,11 +92,11 @@ export default function Navbar() {
     };
   }, []);
 
-  const gradientText =
+  const gradientText: string =
     "bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 bg-clip-text text-transparent drop-shadow-[0_2px_24px_rgba(255,76,41,0.25)]";
-  const gradientNavItem =
+  const gradientNavItem: string =
     "hover:bg-gradient-to-r hover:from-red-500/20 hover:to-amber-500/20 hover:text-red-400";
-  const gradientButton =
+  const gradientButton: string =
     "px-6 py-3 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 text-white rounded-3xl shadow-lg transition duration-300";
 
   return (
@@ -95,7 +105,7 @@ export default function Navbar() {
         <div className="fixed top-4 right-4 z-50">
           <AnimatedHamburgerButton
             active={openMobile}
-            onClick={() => setOpenMobile((prev) => !prev)}
+            onClick={() => setOpenMobile((prev: boolean) => !prev)}
           />
         </div>
         {openMobile && (
@@ -117,7 +127,7 @@ export default function Navbar() {
               </div>
               <Separator />
               <div className="flex flex-col items-center space-y-4 w-full mt-8 z-10 max-h-[60vh] overflow-y-auto">
-                {navItems.map(({ title, url, icon: Icon }) => (
+                {navItems.map(({ title, url, icon: Icon }: NavItem) => (
                   <button
                     key={title}
                     onClick={() => scrollToSection(url.substring(1))}
@@ -170,7 +180,7 @@ export default function Navbar() {
         </div>
         <Separator />
         <div className="flex flex-col items-center space-y-4 w-full mt-8 z-10 max-h-[60vh] overflow-y-auto">
-          {navItems.map(({ title, url, icon: Icon, external }) => (
+          {navItems.map(({ title, url, icon: Icon, external }: NavItem) => (
             <button
               key={title}
               onClick={() => {

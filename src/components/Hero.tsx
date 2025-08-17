@@ -4,7 +4,9 @@ import Blob from "@/components/Blob";
 import SocialLinks from "@/components/SocialLinks";
 import { motion } from "framer-motion";
 
-const typingTexts = [
+type TypingText = string;
+
+const typingTexts: TypingText[] = [
   "Full Stack Engineer",
   "UI/UX Designer",
   "Web3 Developer",
@@ -12,18 +14,19 @@ const typingTexts = [
 ];
 
 export default function Hero() {
-  const [currentText, setCurrentText] = useState("");
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [typing, setTyping] = useState(true);
-  const [charIndex, setCharIndex] = useState(0);
+  const [currentText, setCurrentText] = useState<string>("");
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [typing, setTyping] = useState<boolean>(true);
+  const [charIndex, setCharIndex] = useState<number>(0);
 
-  const handleTypingEffect = () => {
-    let timeout;
+  const handleTypingEffect = (): (() => void) => {
+    let timeout: NodeJS.Timeout;
+    
     if (typing) {
       if (charIndex < typingTexts[currentIndex].length) {
         timeout = setTimeout(() => {
-          setCurrentText((prev) => prev + typingTexts[currentIndex][charIndex]);
-          setCharIndex((prev) => prev + 1);
+          setCurrentText((prev: string) => prev + typingTexts[currentIndex][charIndex]);
+          setCharIndex((prev: number) => prev + 1);
         }, 80);
       } else {
         timeout = setTimeout(() => setTyping(false), 1200);
@@ -32,18 +35,18 @@ export default function Hero() {
       timeout = setTimeout(() => {
         setCurrentText("");
         setCharIndex(0);
-        setCurrentIndex((prev) => (prev + 1) % typingTexts.length);
+        setCurrentIndex((prev: number) => (prev + 1) % typingTexts.length);
         setTyping(true);
       }, 600);
     }
-    return () => clearTimeout(timeout);
+    
+    return (): void => clearTimeout(timeout);
   };
 
   useEffect(() => {
     const cleanup = handleTypingEffect();
     return cleanup;
   }, [charIndex, typing, currentIndex]);
-
 
   return (
     <div className="w-full min-h-screen flex items-center bg-[#09090C] relative overflow-hidden">
@@ -68,7 +71,7 @@ export default function Hero() {
             }}
           >
             <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
-              Hi, I'm Leonardo Fernandes
+              Hi, I&apos;m Leonardo Fernandes
             </h1>
             <p className="text-lg text-gray-300 mb-4">
               I transform ideas into exceptional digital experiences that drive

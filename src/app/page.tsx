@@ -6,8 +6,7 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Experience from "@/components/Experience";
 import Projects from "@/components/Projects";
-import Services from "@/components/Services";
-// import Testimonials from "@/components/Testimonials";
+
 import Contact from "@/components/Contact";
 
 const assets = [
@@ -20,7 +19,7 @@ const assets = [
   "/Resume.pdf",
 ];
 
-function preloadImage(src) {
+function preloadImage(src: string) {
   return new Promise((resolve) => {
     const img = new window.Image();
     img.onload = resolve;
@@ -75,9 +74,6 @@ export default function Home() {
           <section id="home">
             <Hero />
           </section>
-          <section id="services">
-            <Services />
-          </section>
           <section id="about">
             <About />
           </section>
@@ -87,9 +83,6 @@ export default function Home() {
           <section id="projects">
             <Projects />
           </section>
-          {/* <section id="testimonials">
-            <Testimonials />
-          </section> */}
           <section id="contact">
             <Contact />
           </section>

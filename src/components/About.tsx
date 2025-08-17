@@ -1,6 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
 import { Code, Cpu, Database, Globe, Layers, Palette } from "lucide-react";
+import { ReactElement } from "react";
+
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -20,7 +22,13 @@ const staggerContainer = {
   },
 };
 
-const skillCategories = [
+interface SkillCategory {
+  title: string;
+  icon: ReactElement;
+  skills: string[];
+}
+
+const skillCategories: SkillCategory[] = [
   {
     title: "Languages",
     icon: <Code className="w-6 h-6 text-amber-400" />,
@@ -109,7 +117,7 @@ export default function About() {
               challenges and enjoy learning new technologies to enhance my
               skills. I am always eager to collaborate with others and
               contribute to exciting projects. My goal is to create impactful
-              applications that make a difference in people's lives.
+              applications that make a difference in people&apos;s lives.
             </p>
           </motion.div>
         </div>

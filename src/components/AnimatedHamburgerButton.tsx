@@ -1,6 +1,17 @@
-import { MotionConfig, motion } from "framer-motion";
+import { MotionConfig, motion, Variants } from "framer-motion";
 
-const VARIANTS = {
+interface AnimatedHamburgerButtonProps {
+  active: boolean;
+  onClick: () => void;
+}
+
+interface VariantConfig {
+  top: Variants;
+  middle: Variants;
+  bottom: Variants;
+}
+
+const VARIANTS: VariantConfig = {
   top: {
     open: {
       rotate: ["0deg", "0deg", "45deg"],
@@ -33,7 +44,10 @@ const VARIANTS = {
   },
 };
 
-export default function AnimatedHamburgerButton({ active, onClick }) {
+export default function AnimatedHamburgerButton({ 
+  active, 
+  onClick 
+}: AnimatedHamburgerButtonProps){
   return (
     <MotionConfig
       transition={{

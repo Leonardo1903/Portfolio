@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import ExperienceCard from "./ExperienceCard";
+import ExperienceCard from "@/components/ExperienceCard";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 const fadeIn = {
@@ -22,7 +22,25 @@ const staggerContainer = {
   },
 };
 
-const experiences = [
+interface ExperienceItem {
+  title: string;
+  company: string;
+  location: string;
+  period: string;
+  description: string;
+  achievements?: string[];
+}
+
+interface EducationItem {
+  degree: string;
+  school: string;
+  location: string;
+  period: string;
+  description: string;
+  achievements?: string[];
+}
+
+const experiences: ExperienceItem[] = [
   {
     title: "SDE Intern",
     company: "myresQR.life · Internship",
@@ -39,7 +57,7 @@ const experiences = [
   },
 ];
 
-const education = [
+const education: EducationItem[] = [
   {
     degree: "Int Mtech in Computer Science Specialization in Cyber Security",
     school: "Vellore Institute of Technology",
@@ -133,7 +151,7 @@ export default function Experience() {
                 variants={staggerContainer}
                 className="relative z-10"
               >
-                {experiences.map((exp, index) => (
+                {experiences.map((exp: ExperienceItem, index: number) => (
                   <ExperienceCard
                     key={index}
                     exp={exp}
@@ -155,7 +173,7 @@ export default function Experience() {
                 variants={staggerContainer}
                 className="relative z-10"
               >
-                {education.map((edu, index) => (
+                {education.map((edu: EducationItem, index: number) => (
                   <ExperienceCard
                     key={index}
                     exp={{

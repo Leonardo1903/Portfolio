@@ -3,8 +3,35 @@ import { Calendar, MapPin } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
-export default function ExperienceCard({ exp, fadeIn, index, align }) {
-  const isLeft = align === "left";
+interface ExperienceCardProps {
+  exp: {
+    title: string;
+    company: string;
+    location: string;
+    period: string;
+    description: string;
+    achievements?: string[];
+  };
+  fadeIn: {
+    hidden: { opacity: number; y: number };
+    visible: {
+      opacity: number;
+      y: number;
+      transition: { duration: number };
+    };
+  };
+  index: number;
+  align: "left" | "right";
+}
+
+export default function ExperienceCard({ 
+  exp, 
+  fadeIn, 
+  index, 
+  align 
+}: ExperienceCardProps) {
+  const isLeft: boolean = align === "left";
+  
   return (
     <motion.div
       variants={fadeIn}
@@ -33,14 +60,14 @@ export default function ExperienceCard({ exp, fadeIn, index, align }) {
               </div>
             </div>
           </CardHeader>
-          <Separator className=" bg-gradient-to-r from-red-400 to-amber-400 opacity-30" />
+          <Separator className="bg-gradient-to-r from-red-400 to-amber-400 opacity-30" />
           <CardContent>
             <p className="text-gray-300 mb-4">{exp.description}</p>
             {Array.isArray(exp.achievements) && exp.achievements.length > 0 && (
               <div>
                 <h5 className="text-sm font-medium text-white mb-2">Key Achievements:</h5>
                 <ul className="space-y-1">
-                  {exp.achievements.map((achievement, idx) => (
+                  {exp.achievements.map((achievement: string, idx: number) => (
                     <li key={idx} className="text-sm text-gray-300 flex items-start">
                       <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-red-400 to-amber-400 mt-1.5 mr-2 flex-shrink-0" />
                       <span>{achievement}</span>

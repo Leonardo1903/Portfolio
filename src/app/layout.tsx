@@ -1,20 +1,25 @@
+import type { Metadata } from "next";
 import { Roboto_Condensed } from "next/font/google";
-import "./globals.css";
 import Navbar from "@/components/Navbar";
+import "./globals.css";
 
 const roboto = Roboto_Condensed({
   variable: "--font-roboto",
   subsets: ["latin"],
 });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Leonardo Fernandes",
-  description: "A portfolio showcasing my work and skills.",
+  description: "A portfolio showcasing my work and skills."
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+   <html lang="en" suppressHydrationWarning>
       <body className={`${roboto.variable} antialiased overflow-hidden`}>
         <div className="flex min-h-screen">
           <Navbar />

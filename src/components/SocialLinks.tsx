@@ -6,8 +6,15 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
+import { ReactElement } from "react";
 
-const links = [
+interface SocialLink {
+  href: string;
+  icon: ReactElement;
+  title: string;
+}
+
+const links: SocialLink[] = [
   {
     href: "https://github.com/Leonardo1903",
     icon: <Github size={24} />,
@@ -29,7 +36,7 @@ export default function SocialLinks() {
   return (
     <TooltipProvider>
       <div className="flex gap-4 items-center mt-3">
-        {links.map((link) => (
+        {links.map((link: SocialLink) => (
           <Tooltip key={link.title}>
             <TooltipTrigger asChild>
               <Button
