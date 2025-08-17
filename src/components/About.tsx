@@ -1,7 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { Code, Cpu, Database, Globe, Layers, Palette } from "lucide-react";
-import { ReactElement } from "react";
+import { Code, Cpu, Database, Layers, Palette, ChevronRight } from "lucide-react";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -17,58 +16,97 @@ const staggerContainer = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
+      staggerChildren: 0.08,
     },
   },
 };
 
+
+
+interface Skill {
+  name: string;
+}
+
 interface SkillCategory {
   title: string;
-  icon: ReactElement;
-  skills: string[];
+  icon: React.ReactNode;
+  skills: Skill[];
 }
 
 const skillCategories: SkillCategory[] = [
   {
-    title: "Languages",
+    title:" Core",
     icon: <Code className="w-6 h-6 text-amber-400" />,
-    skills: ["JavaScript / TypeScript", "C++", "Python", "Solidity", "Rust"],
+    skills: [
+      { name: "C++" },
+      { name: "Python" },
+      { name: "JavaScript" },
+      { name: "TypeScript" },
+      { name: "Rust" },
+      { name: "Git" },
+      { name: "Solidity" },
+      { name: "Postman" },
+      { name: "Figma" },
+    ],
   },
   {
     title: "Frontend",
     icon: <Palette className="w-6 h-6 text-red-400" />,
     skills: [
-      "React.js / Next.js",
-      "React-Native / Expo",
-      "Redux",
-      "Tailwind CSS",
-      "Framer Motion",
+      { name: "HTML5" },
+      { name: "CSS3" },
+      { name: "React.js" },
+      { name: "Next.js" },
+      { name: "React Native" },
+      { name: "Expo" },
+      { name: "Redux" },
+      { name: "Tailwind CSS" },
+      { name: "Framer Motion" },
+      { name: "Three.js" },
     ],
   },
   {
     title: "Backend",
     icon: <Database className="w-6 h-6 text-orange-400" />,
-    skills: ["Node.js", "Express.js", "MongoDB", "PostgreSQL", "Appwrite"],
+    skills: [
+      { name: "Node.js" },
+      { name: "Express.js" },
+      { name: "Hono.js" },
+      { name: "FastAPI" },
+      { name: "MongoDB" },
+      { name: "PostgreSQL" },
+      { name: "Appwrite" },
+      { name: "GraphQL" },
+      { name: "Redis" },
+      { name: "Prisma" },
+    ],
   },
   {
     title: "DevOps",
     icon: <Layers className="w-6 h-6 text-orange-400" />,
-    skills: ["Docker", "AWS", "Terraform", "Kubernetes", "GitHub Actions"],
-  },
-  {
-    title: "Web3",
-    icon: <Globe className="w-6 h-6 text-amber-400" />,
-    skills: ["Ethereum", "Solana", "Hardhat", "Foundry", "Anchor"],
-  },
-  {
-    title: "AI-Agents",
-    icon: <Cpu className="w-6 h-6 text-red-400" />,
     skills: [
-      "OpenAI / Gemini API",
-      "LangChain",
-      "Langraph",
-      "Langsmith",
-      "QuadrantDB",
+      { name: "AWS" },
+      { name: "Docker" },
+      { name: "Kubernetes" },
+      { name: "Grafana" },
+      { name: "Prometheus" },
+      { name: "Jenkins" },
+      { name: "GitHub Actions" },
+      { name: "Terraform" },
+    ],
+  },
+  {
+    title: "Others",
+    icon: <Cpu className="w-6 h-6 text-amber-400" />,
+    skills: [
+      { name: "LangChain" },
+      { name: "CrewAI" },
+      { name: "Qdrant" },
+      { name: "Neo4j" },
+      { name: "Ethereum" },
+      { name: "Solana" },
+      { name: "Hardhat" },
+      { name: "Foundry" },
     ],
   },
 ];
@@ -76,13 +114,14 @@ const skillCategories: SkillCategory[] = [
 export default function About() {
   return (
     <div className="w-full min-h-screen bg-[#09090C] py-16 px-4 md:px-8 relative overflow-hidden">
+      {/* Background Effects */}
       <div className="pointer-events-none absolute inset-0 z-0">
         <div className="absolute inset-0 bg-black/70 backdrop-blur-2xl" />
         <div className="absolute top-1/4 right-1/4 w-1/2 h-1/3 bg-gradient-to-r from-red-400/20 via-orange-400/10 to-amber-400/10 blur-3xl rounded-full opacity-40" />
         <div className="absolute bottom-0 left-0 w-1/3 h-1/4 bg-gradient-to-tr from-amber-400/15 to-transparent blur-2xl rounded-full opacity-20" />
       </div>
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="max-w-[1600px] mx-auto relative z-10">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -129,7 +168,7 @@ export default function About() {
           variants={fadeIn}
           className="text-2xl md:text-3xl font-semibold text-white mb-10 text-center"
         >
-          My Skills
+          My Skills & Technologies
         </motion.h3>
 
         <motion.div
@@ -137,30 +176,39 @@ export default function About() {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
         >
           {skillCategories.map((category, index) => (
             <motion.div
               key={index}
               variants={fadeIn}
-              className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/10 hover:border-red-400/50 transition-all duration-300 hover:shadow-red-400/20 hover:shadow-lg"
+              className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 shadow-lg border border-white/10"
             >
-              <div className="flex items-center mb-4">
-                <div className="p-3 rounded-full bg-black/30 mr-4">
+              <div className="flex items-center mb-4 pb-3 border-b border-white/10">
+                <div className="p-2 rounded-full bg-gradient-to-br from-red-500/20 to-amber-500/20 mr-3">
                   {category.icon}
                 </div>
-                <h4 className="text-xl font-semibold text-white">
+                <h4 className="text-lg font-semibold text-white">
                   {category.title}
                 </h4>
               </div>
-              <ul className="space-y-2">
+              
+              <motion.div
+                variants={staggerContainer}
+                className="space-y-2"
+              >
                 {category.skills.map((skill, idx) => (
-                  <li key={idx} className="text-gray-300 flex items-center">
-                    <span className="w-2 h-2 rounded-full bg-gradient-to-r from-red-400 to-amber-400 mr-2" />
-                    {skill}
-                  </li>
+                  <div
+                    key={idx}
+                    className="flex items-center group cursor-pointer"
+                  >
+                    <ChevronRight className="w-3 h-3 text-red-400 mr-2" />
+                    <span className="text-gray-300 font-medium text-sm">
+                      {skill.name}
+                    </span>
+                  </div>
                 ))}
-              </ul>
+              </motion.div>
             </motion.div>
           ))}
         </motion.div>
