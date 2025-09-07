@@ -1,6 +1,13 @@
 "use client";
 import { motion } from "framer-motion";
-import { Code, Cpu, Database, Layers, Palette, ChevronRight } from "lucide-react";
+import {
+  Code,
+  Cpu,
+  Database,
+  Layers,
+  Palette,
+  ChevronRight,
+} from "lucide-react";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -21,8 +28,6 @@ const staggerContainer = {
   },
 };
 
-
-
 interface Skill {
   name: string;
 }
@@ -35,7 +40,7 @@ interface SkillCategory {
 
 const skillCategories: SkillCategory[] = [
   {
-    title:" Core",
+    title: " Core",
     icon: <Code className="w-6 h-6 text-amber-400" />,
     skills: [
       { name: "C++" },
@@ -62,7 +67,6 @@ const skillCategories: SkillCategory[] = [
       { name: "Redux" },
       { name: "Tailwind CSS" },
       { name: "Framer Motion" },
-      { name: "Three.js" },
     ],
   },
   {
@@ -77,7 +81,6 @@ const skillCategories: SkillCategory[] = [
       { name: "PostgreSQL" },
       { name: "Appwrite" },
       { name: "GraphQL" },
-      { name: "Redis" },
       { name: "Prisma" },
     ],
   },
@@ -149,14 +152,20 @@ export default function About() {
             className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/10 max-w-2xl w-full text-center"
           >
             <h3 className="text-2xl font-semibold text-white mb-6">Who I Am</h3>
-            <p className="text-gray-300">
-              I am a passionate software engineer with a strong focus on
-              building innovative solutions. My expertise lies in web
-              development, app development, Web3 and AI agents. I thrive on
-              challenges and enjoy learning new technologies to enhance my
-              skills. I am always eager to collaborate with others and
-              contribute to exciting projects. My goal is to create impactful
-              applications that make a difference in people&apos;s lives.
+            <p className="text-gray-300 text-justify">
+              As a software engineer, I architect and build high-impact digital
+              solutions that bridge the gap between user needs and cutting-edge
+              technology. I specialize in developing full-stack web
+              applications, intuitive mobile apps, and pioneering the next
+              generation of the internet with Web3 and intelligent AI agents. 
+              <br/>
+              I
+              am driven by complex challenges and a commitment to continuous
+              learning, always seeking to master new tools and frameworks. My
+              goal is not just to write code, but to engineer meaningful
+              experiences that solve real-world problems. I am actively seeking
+              opportunities to collaborate with forward-thinking teams on
+              ambitious projects.
             </p>
           </motion.div>
         </div>
@@ -192,11 +201,8 @@ export default function About() {
                   {category.title}
                 </h4>
               </div>
-              
-              <motion.div
-                variants={staggerContainer}
-                className="space-y-2"
-              >
+
+              <motion.div variants={staggerContainer} className="space-y-2">
                 {category.skills.map((skill, idx) => (
                   <div
                     key={idx}
