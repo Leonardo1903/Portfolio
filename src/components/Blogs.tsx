@@ -36,6 +36,9 @@ interface BlogPost {
   publishedAt: string;
   readTimeInMinutes: number;
 }
+interface BlogEdge {
+  node: BlogPost;
+}
 
 export default function Blogs() {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
@@ -75,14 +78,15 @@ export default function Blogs() {
           { query },
           {
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
           }
         );
-        
+
         const posts =
-          data.data?.publication?.posts?.edges?.map((edge: any) => edge.node) ||
-          [];
+          data.data?.publication?.posts?.edges?.map(
+            (edge: BlogEdge) => edge.node
+          ) || [];
         setBlogs(posts);
       } catch (err) {
         setError("Failed to fetch blogs");
@@ -136,7 +140,8 @@ export default function Blogs() {
             variants={fadeIn}
             className="text-gray-300 max-w-2xl mx-auto"
           >
-            Sharing my thoughts and knowledge on various topics like web development, app development, and more.
+            Sharing my thoughts and knowledge on various topics like web
+            development, app development, and more.
           </motion.p>
         </motion.div>
 
