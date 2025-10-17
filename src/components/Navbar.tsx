@@ -12,7 +12,6 @@ import {
   SquarePen,
   Download,
   ExternalLink,
-  Layers,
   LucideIcon,
 } from "lucide-react";
 import AnimatedHamburgerButton from "@/components/AnimatedHamburgerButton";
@@ -29,12 +28,7 @@ const navItems: NavItem[] = [
   { title: "About", url: "#about", icon: User },
   { title: "Experience", url: "#experience", icon: Briefcase },
   { title: "Projects", url: "#projects", icon: Folder },
-  {
-    title: "Blog",
-    url: "https://blog.leonardo1903.me/",
-    icon: SquarePen,
-    external: true,
-  },
+  { title: "Blog", url: "#blogs", icon: SquarePen },
   { title: "Contact", url: "#contact", icon: Mail },
 ];
 

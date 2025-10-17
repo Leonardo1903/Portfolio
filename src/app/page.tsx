@@ -6,7 +6,7 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Experience from "@/components/Experience";
 import Projects from "@/components/Projects";
-
+import Blogs from "@/components/Blogs";
 import Contact from "@/components/Contact";
 
 const assets = [
@@ -14,7 +14,6 @@ const assets = [
   "/Leonardo.jpg",
   "/EchoVault.png",
   "/QuikNote.png",
-  "/ClipIt.png",
   "/Concise.png",
   "/Resume.pdf",
 ];
@@ -82,6 +81,9 @@ export default function Home() {
           </section>
           <section id="projects">
             <Projects />
+          </section>
+          <section id="blogs">
+            <Blogs />
           </section>
           <section id="contact">
             <Contact />

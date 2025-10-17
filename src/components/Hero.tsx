@@ -56,7 +56,7 @@ export default function Hero() {
         <div className="absolute bottom-0 right-0 w-1/3 h-1/4 bg-gradient-to-tl from-amber-400/15 to-transparent blur-2xl rounded-full opacity-20" />
       </div>
       <div className="flex flex-col-reverse md:flex-row items-center justify-between w-full px-4 z-10 gap-10 md:gap-0 pb-10 md:pb-0">
-        <div className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left mt-16 md:mt-0 bg-white/5 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/10">
+        <div className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left mt-4 md:mt-0 bg-white/5 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/10">
           <motion.div
             initial={{
               opacity: 0,
