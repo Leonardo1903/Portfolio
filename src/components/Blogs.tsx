@@ -45,15 +45,14 @@ export default function Blogs() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const HASHNODE_USERNAME = "leonardo1903";
-  const HASHNODE_API = "https://gql.hashnode.com";
-
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
         const query = `
           query Publication {
-            publication(host: "${HASHNODE_USERNAME}.hashnode.dev") {
+            publication(host: "${
+              process.env.NEXT_PUBLIC_HASHNODE_USERNAME || ""
+            }.hashnode.dev") {
               posts(first: 6) {
                 edges {
                   node {
@@ -74,7 +73,7 @@ export default function Blogs() {
         `;
 
         const { data } = await axios.post(
-          HASHNODE_API,
+          process.env.NEXT_PUBLIC_HASHNODE_API || "",
           { query },
           {
             headers: {
