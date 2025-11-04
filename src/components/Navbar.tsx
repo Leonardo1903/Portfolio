@@ -13,8 +13,9 @@ import {
   Download,
   ExternalLink,
   LucideIcon,
+  Menu,
+  X,
 } from "lucide-react";
-import AnimatedHamburgerButton from "@/components/AnimatedHamburgerButton";
 
 interface NavItem {
   title: string;
@@ -97,10 +98,18 @@ export default function Navbar() {
     <>
       <div className="md:hidden">
         <div className="fixed top-4 right-4 z-50">
-          <AnimatedHamburgerButton
-            active={openMobile}
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setOpenMobile((prev: boolean) => !prev)}
-          />
+            className="bg-black/50 backdrop-blur-sm hover:bg-black/70"
+          >
+            {openMobile ? (
+              <X className="w-8 h-8 text-white" />
+            ) : (
+              <Menu className="w-8 h-8 text-white" />
+            )}
+          </Button>
         </div>
         {openMobile && (
           <div className="fixed inset-0 z-40 flex">
