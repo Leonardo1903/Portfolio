@@ -13,8 +13,8 @@ const assets = [
   "/Profile.jpeg",
   "/Leonardo.jpg",
   "/EchoVault.png",
+  "/OgImage.png",
   "/QuikNote.png",
-  "/Concise.png",
   "/Resume.pdf",
 ];
 
