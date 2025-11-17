@@ -24,15 +24,6 @@ const staggerContainer = {
 
 const projects = [
   {
-    title: "Concise",
-    description:
-      "A web application and Chrome extension designed to help users quickly summarize articles by providing a URL. It streamlines the process of extracting key information from lengthy articles, making content consumption more efficient and accessible.",
-    image: "/Concise.png",
-    tags: ["React", "TailwindCSS", "Redux", "Shadcn-UI"],
-    github: "https://github.com/Leonardo1903/Concise",
-    demo: "https://concise.leonardo1903.me/",
-  },
-  {
     title: "QuikNote",
     description:
       "A full-stack sticky notes application allowing users to securely authenticate, create, organize, and manage their notes with advanced features like drag-and-drop functionality and personalized dashboards.",

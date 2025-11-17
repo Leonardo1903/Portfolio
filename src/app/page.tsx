@@ -9,7 +9,7 @@ import Projects from "@/components/Projects";
 import Blogs from "@/components/Blogs";
 import Contact from "@/components/Contact";
 
-const assets = [
+const staticAssets = [
   "/Profile.jpeg",
   "/Leonardo.jpg",
   "/EchoVault.png",
@@ -30,34 +30,90 @@ function preloadImage(src: string) {
 export default function Home() {
   const [progress, setProgress] = useState(0);
   const [loader, setLoader] = useState(true);
+  const [blogImages, setBlogImages] = useState<string[]>([]);
 
   useEffect(() => {
     let isMounted = true;
     let loaded = 0;
-    const total = assets.length + 1;
+    let blogCovers: string[] = [];
 
-    const fontPromise = document.fonts
-      ? document.fonts.ready.then(() => {
-          loaded += 1;
-          if (isMounted) setProgress(Math.round((loaded / total) * 100));
-        })
-      : Promise.resolve();
+    async function fetchBlogImages() {
+      try {
+        type HashnodeEdge = {
+          node?: {
+            coverImage?: { url?: string } | null;
+          } | null;
+        };
+        type HashnodeResponse = {
+          data?: {
+            publication?: {
+              posts?: {
+                edges?: HashnodeEdge[] | null;
+              } | null;
+            } | null;
+          } | null;
+        };
 
-    Promise.all([
-      ...assets.map((src) =>
-        preloadImage(src).then(() => {
-          loaded += 1;
-          if (isMounted) setProgress(Math.round((loaded / total) * 100));
-        })
-      ),
-      fontPromise,
-    ]).then(() => {
+        const query = `
+          query Publication {
+            publication(host: "${process.env.NEXT_PUBLIC_HASHNODE_USERNAME}") {
+              posts(first: 6) {
+                edges {
+                  node {
+                    coverImage { url }
+                  }
+                }
+              }
+            }
+          }
+        `;
+        const endpoint = process.env.NEXT_PUBLIC_HASHNODE_API || "";
+        if (!endpoint) return [];
+        const json = (await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query }),
+        }).then((res) => res.json())) as HashnodeResponse;
+        const edges = json?.data?.publication?.posts?.edges ?? [];
+        blogCovers =
+          edges
+            .map((edge) => edge?.node?.coverImage?.url)
+            .filter(Boolean) as string[] || [];
+        if (isMounted) setBlogImages(blogCovers);
+        return blogCovers;
+      } catch {
+        return [];
+      }
+    }
+
+    async function preloadAll() {
+      const covers = await fetchBlogImages();
+      const allAssets = [...staticAssets, ...covers];
+      const total = allAssets.length + 1;
+
+      const fontPromise = document.fonts
+        ? document.fonts.ready.then(() => {
+            loaded += 1;
+            if (isMounted) setProgress(Math.round((loaded / total) * 100));
+          })
+        : Promise.resolve();
+
+      await Promise.all([
+        ...allAssets.map((src) =>
+          preloadImage(src).then(() => {
+            loaded += 1;
+            if (isMounted) setProgress(Math.round((loaded / total) * 100));
+          })
+        ),
+        fontPromise,
+      ]);
       if (isMounted) setProgress(100);
       setTimeout(() => {
         if (isMounted) setLoader(false);
       }, 400);
-    });
+    }
 
+    preloadAll();
     return () => {
       isMounted = false;
     };
