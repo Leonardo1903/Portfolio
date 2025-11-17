@@ -50,9 +50,7 @@ export default function Blogs() {
       try {
         const query = `
           query Publication {
-            publication(host: "${
-              process.env.NEXT_PUBLIC_HASHNODE_USERNAME || ""
-            }.hashnode.dev") {
+            publication(host: "${process.env.NEXT_PUBLIC_HASHNODE_USERNAME}") {
               posts(first: 6) {
                 edges {
                   node {
