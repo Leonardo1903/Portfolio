@@ -50,7 +50,7 @@ export default function Blogs() {
       try {
         const query = `
           query Publication {
-            publication(host: "${process.env.NEXT_PUBLIC_HASHNODE_USERNAME}") {
+            publication(host: "blog.leonardo1903.me") {
               posts(first: 6) {
                 edges {
                   node {
@@ -70,8 +70,7 @@ export default function Blogs() {
           }
         `;
 
-        const endpoint =
-          process.env.NEXT_PUBLIC_HASHNODE_API;
+        const endpoint = "https://gql.hashnode.com";
         if (!endpoint) {
           setError("Hashnode API endpoint is not configured");
           return;
