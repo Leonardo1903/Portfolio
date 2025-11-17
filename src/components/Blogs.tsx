@@ -70,8 +70,15 @@ export default function Blogs() {
           }
         `;
 
-        const { data } = await axios.post(
-          process.env.NEXT_PUBLIC_HASHNODE_API || "",
+        const endpoint =
+          process.env.NEXT_PUBLIC_HASHNODE_API;
+        if (!endpoint) {
+          setError("Hashnode API endpoint is not configured");
+          return;
+        }
+
+        const response = await axios.post(
+          endpoint,
           { query },
           {
             headers: {
@@ -79,9 +86,10 @@ export default function Blogs() {
             },
           }
         );
+        const data = response.data;
 
         const posts =
-          data.data?.publication?.posts?.edges?.map(
+          data?.data?.publication?.posts?.edges?.map(
             (edge: BlogEdge) => edge.node
           ) || [];
         setBlogs(posts);

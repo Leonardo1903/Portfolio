@@ -1,3 +1,4 @@
+"use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
@@ -53,9 +54,9 @@ export default function Blob() {
         <motion.path
           fill="url(#blob-gradient-base)"
           style={{ filter: "blur(24px)", opacity: 0.4 }}
-          d={blobShapes3[0]}
+          d={blobShapes3[0] || "M0,0"}
           animate={{
-            d: blobShapes3,
+            d: blobShapes3.length ? blobShapes3 : [blobShapes3[0] || "M0,0"],
           }}
           transition={{
             duration: 30,
@@ -92,9 +93,9 @@ export default function Blob() {
         <motion.path
           fill="url(#blob-gradient-2)"
           style={{ filter: "blur(16px)", opacity: 0.5 }}
-          d={blobShapes2[0]}
+          d={blobShapes2[0] || "M0,0"}
           animate={{
-            d: blobShapes2,
+            d: blobShapes2.length ? blobShapes2 : [blobShapes2[0] || "M0,0"],
           }}
           transition={{
             duration: 25,
@@ -130,9 +131,9 @@ export default function Blob() {
         <motion.path
           fill="url(#blob-gradient-1)"
           style={{ filter: "blur(8px)", opacity: 0.7 }}
-          d={blobShapes1[0]}
+          d={blobShapes1[0] || "M0,0"}
           animate={{
-            d: blobShapes1,
+            d: blobShapes1.length ? blobShapes1 : [blobShapes1[0] || "M0,0"],
           }}
           transition={{
             duration: 20,
