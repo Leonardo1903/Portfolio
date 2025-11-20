@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto_Condensed } from "next/font/google";
 import Navbar from "@/components/Navbar";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import OgImage from "../../public/OgImage.png";
 import "./globals.css";
 
@@ -42,7 +43,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-   <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body className={`${roboto.variable} antialiased overflow-hidden`}>
         <div className="flex min-h-screen">
           <Navbar />
@@ -50,6 +51,7 @@ export default function RootLayout({
             {children}
           </main>
         </div>
+        <SpeedInsights />
       </body>
     </html>
   );
