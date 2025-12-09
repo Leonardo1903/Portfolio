@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Leonardo Fernandes",
     description: "A portfolio showcasing my work and skills.",
-    images: ["https://leonardo1903.me/Leonardo.jpg"],
+    images: [OgImage.src],
   },
 };
 
