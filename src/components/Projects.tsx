@@ -41,15 +41,22 @@ const projects = [
     github: "https://github.com/Leonardo1903/EchoVault",
     demo: "https://echovault.leonardo1903.me/",
   },
-  // {
-  //   title: "PropertyPulse",
-  //   description:
-  //     "A collaborative task management application with real-time updates, team workspaces, and productivity analytics.",
-  //   image: "/placeholder.svg?height=600&width=800",
-  //   tags: ["React", "Nodejs", "TailwindCSS", "Redux", "Expressjs", "MongoDB"],
-  //   github: "https://github.com/username/task-management",
-  //   demo: "https://tasks.example.com",
-  // },
+  {
+    title: "Arkive",
+    description:
+      "A secure cloud storage platform for managing, organizing, and sharing files effortlessly. Features intelligent file management, folder organization, advanced search, and seamless collaboration.",
+    image: "/Arkive.png",
+    tags: [
+      "Next.js",
+      "TailwindCSS",
+      "Clerk",
+      "Drizzle ORM",
+      "PostgreSQL",
+      "ImageKit",
+    ],
+    github: "https://github.com/Leonardo1903/Arkive",
+    demo: "https://tasks.example.com",
+  },
 ];
 
 export default function Projects() {
