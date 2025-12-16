@@ -15,6 +15,7 @@ const staticAssets = [
   "/EchoVault.png",
   "/OgImage.png",
   "/QuikNote.png",
+  "/Arkive.png",
   "/Resume.pdf",
 ];
 

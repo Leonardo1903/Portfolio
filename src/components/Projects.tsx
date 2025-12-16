@@ -55,7 +55,7 @@ const projects = [
       "ImageKit",
     ],
     github: "https://github.com/Leonardo1903/Arkive",
-    demo: "https://tasks.example.com",
+    demo: "https://arkive.leonardo1903.me/",
   },
 ];
 
