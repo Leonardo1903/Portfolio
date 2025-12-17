@@ -35,7 +35,7 @@ const projects = [
   {
     title: "EchoVault",
     description:
-      "An anonymous feedback platform designed to foster open communication and collaboration. It allows users to send and receive anonymous messages, leveraging AI-generated suggestions to enhance engagement.",
+      "An anonymous feedback platform designed to foster open communication and collaboration. It allows users to send and receive anonymous messages, leveraging AI-generated suggestions.",
     image: "/EchoVault.png",
     tags: ["Nextjs", "Authjs", "TailwindCSS", "MongoDB"],
     github: "https://github.com/Leonardo1903/EchoVault",
