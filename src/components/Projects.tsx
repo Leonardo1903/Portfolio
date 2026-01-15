@@ -26,9 +26,9 @@ const projects = [
   {
     title: "QuikNote",
     description:
-      "A full-stack sticky notes application allowing users to securely authenticate, create, organize, and manage their notes with advanced features like drag-and-drop functionality and personalized dashboards.",
+      "A modern note-taking platform designed for effortless organization and productivity. It allows users to create, organize, and manage notes across multiple notebooks with favorites, and trash recovery",
     image: "/QuikNote.png",
-    tags: ["React.Js", "TailwindCSS", "Appwrite", "Framer Motion"],
+    tags: ["React.js", "Appwrite", "TailwindCSS", "Vite"],
     github: "https://github.com/Leonardo1903/QuikNote",
     demo: "https://quiknote.leonardo1903.me/",
   },
@@ -37,7 +37,7 @@ const projects = [
     description:
       "An anonymous feedback platform designed to foster open communication and collaboration. It allows users to send and receive anonymous messages, leveraging AI-generated suggestions.",
     image: "/EchoVault.png",
-    tags: ["Nextjs", "Authjs", "TailwindCSS", "MongoDB"],
+    tags: ["Next.js", "Auth.js", "TailwindCSS", "MongoDB"],
     github: "https://github.com/Leonardo1903/EchoVault",
     demo: "https://echovault.leonardo1903.me/",
   },
@@ -105,7 +105,7 @@ export default function Projects() {
             <motion.div
               key={index}
               variants={fadeIn}
-              className="bg-white/5 backdrop-blur-xl rounded-2xl overflow-hidden shadow-lg border border-white/10 hover:border-red-400/50 transition-all duration-300 hover:shadow-red-400/20 hover:shadow-lg group"
+              className="bg-white/5 backdrop-blur-xl rounded-2xl overflow-hidden shadow-lg border border-white/10 hover:border-red-400/50 transition-all duration-300 hover:shadow-red-400/20 hover:shadow-lg group flex flex-col h-full"
             >
               <div className="relative h-48 overflow-hidden">
                 <Image
@@ -117,15 +117,15 @@ export default function Projects() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
               </div>
 
-              <div className="p-6">
+              <div className="p-6 flex flex-col flex-grow">
                 <h3 className="text-xl font-semibold text-white mb-2">
                   {project.title}
                 </h3>
-                <p className="text-gray-300 text-sm mb-4">
+                <p className="text-gray-300 text-sm mb-4 flex-grow">
                   {project.description}
                 </p>
 
-                <div className="flex flex-wrap gap-2 mb-6">
+                <div className="flex flex-wrap gap-2 mb-6 min-h-[60px] content-start">
                   {project.tags.map((tag, idx) => (
                     <span
                       key={idx}
