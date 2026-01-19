@@ -1,14 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
-import {
-  Code,
-  Cpu,
-  Database,
-  Layers,
-  Palette,
-  ChevronRight,
-} from "lucide-react";
+import { Code, Cpu, Database, Layers, Palette } from "lucide-react";
 import content from "../../public/Data.json";
+import { Badge } from "@/components/ui/badge";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -151,15 +145,13 @@ export default function About() {
 
               <motion.div variants={staggerContainer} className="space-y-2">
                 {category.skills.map((skill, idx) => (
-                  <div
+                  <Badge
                     key={idx}
-                    className="flex items-center group cursor-pointer"
+                    variant="outline"
+                    className="bg-white/5 text-gray-300 border-white/10 hover:bg-white/10"
                   >
-                    <ChevronRight className="w-3 h-3 text-red-400 mr-2" />
-                    <span className="text-gray-300 font-medium text-sm">
-                      {skill.name}
-                    </span>
-                  </div>
+                    {skill.name}
+                  </Badge>
                 ))}
               </motion.div>
             </motion.div>
