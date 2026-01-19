@@ -42,10 +42,23 @@
     "experiences": [
       {
         "title": "SDE Intern",
+        "company": "New Opportunity (NOCPL) · Internship",
+        "location": "India · Onsite",
+        "period": "Nov 2025 - Dec 2025 · 2 mos",
+        "description": "My work involved all aspects of software development, from initial planning and design to coding and testing. I was responsible for developing documentation for current projects and coding new features in exiting applications. I also was heavily involved in the testing process of software to ensure high quality and performance",
+        "achievements": [
+          "Gained hands-on experience in full software development lifecycle including planning, design, coding and testing",
+          "Developed comprehensive documentation for existing projects to enhance team collaboration and knowledge sharing",
+          "Coded new features and enhancements in existing applications, improving functionality and user experience",
+          "Participated in rigorous testing processes to ensure software quality, performance, and reliability"
+        ]
+      },
+      {
+        "title": "SDE Intern",
         "company": "myresQR.life · Internship",
         "location": "India · Remote",
         "period": "Nov 2024 - Feb 2025 · 4 mos",
-        "description": "As a Software Development Engineer (SDE) intern at myresQR.life, I focused on enhancing the company's digital platforms. My work involved frontend development using JavaScript, React.js, Tailwind CSS, ShadCN, Recoil, and Axios. I developed and managed the admin portal, dealer portal, post-scan portal, user registration system, and main website.",
+        "description": "I focused on enhancing the company's digital platforms. My work involved frontend development using JavaScript, React.js, Tailwind CSS, ShadCN, Recoil, and Axios. I developed and managed the admin portal, dealer portal, post-scan portal, user registration system, and main website.",
         "achievements": [
           "Sharpened frontend programming abilities and gained a thorough understanding of building user-focused web applications",
           "Developed and managed the admin portal, dealer portal, post-scan portal, user registration system, and main website",
