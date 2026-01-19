@@ -1,0 +1,156 @@
+{
+  "hero": {
+    "name": "Leonardo Fernandes",
+    "title": "Hi, I'm Leonardo Fernandes",
+    "subtitle": "I transform ideas into exceptional digital experiences that drive business growth.",
+    "roles": [
+      "Full Stack Engineer",
+      "UI/UX Designer",
+      "Web3 Developer",
+      "Agentic-AI Developer"
+    ]
+  },
+  "about": {
+    "title": "About Me",
+    "bio": "As a software engineer, I architect and build high-impact digital solutions that bridge the gap between user needs and cutting-edge technology. I specialize in developing full-stack web applications, intuitive mobile apps, and pioneering the next generation of the internet with Web3 and intelligent AI agents. I am driven by complex challenges and a commitment to continuous learning, always seeking to master new tools and frameworks. My goal is not just to write code, but to engineer meaningful experiences that solve real-world problems. I am actively seeking opportunities to collaborate with forward-thinking teams on ambitious projects.",
+    "skillsTitle": "My Skills & Technologies",
+    "skills": {
+      "core": {
+        "title": "Core",
+        "skills": ["C++", "Python", "JavaScript", "TypeScript", "Rust", "Git", "Solidity", "Postman", "Figma"]
+      },
+      "frontend": {
+        "title": "Frontend",
+        "skills": ["HTML5", "CSS3", "React.js", "Next.js", "React Native", "Expo", "Redux", "Tailwind CSS", "Framer Motion"]
+      },
+      "backend": {
+        "title": "Backend",
+        "skills": ["Node.js", "Express.js", "Hono.js", "FastAPI", "MongoDB", "PostgreSQL", "Appwrite", "GraphQL", "Prisma"]
+      },
+      "devops": {
+        "title": "DevOps",
+        "skills": ["AWS", "Docker", "Kubernetes", "Grafana", "Prometheus", "Jenkins", "GitHub Actions", "Terraform"]
+      },
+      "others": {
+        "title": "Others",
+        "skills": ["LangChain", "CrewAI", "Qdrant", "Neo4j", "Ethereum", "Solana", "Hardhat", "Foundry"]
+      }
+    }
+  },
+  "experience": {
+    "title": "Experience & Education",
+    "experiences": [
+      {
+        "title": "SDE Intern",
+        "company": "myresQR.life · Internship",
+        "location": "India · Remote",
+        "period": "Nov 2024 - Feb 2025 · 4 mos",
+        "description": "As a Software Development Engineer (SDE) intern at myresQR.life, I focused on enhancing the company's digital platforms. My work involved frontend development using JavaScript, React.js, Tailwind CSS, ShadCN, Recoil, and Axios. I developed and managed the admin portal, dealer portal, post-scan portal, user registration system, and main website.",
+        "achievements": [
+          "Sharpened frontend programming abilities and gained a thorough understanding of building user-focused web applications",
+          "Developed and managed the admin portal, dealer portal, post-scan portal, user registration system, and main website",
+          "Implemented state management with Recoil and efficient API handling with Axios",
+          "Enhanced UI/UX using Tailwind CSS and ShadCN components"
+        ]
+      }
+    ],
+    "education": [
+      {
+        "degree": "Int Mtech in Computer Science Specialization in Cyber Security",
+        "school": "Vellore Institute of Technology",
+        "location": "Bhopal, Madhya Pradesh",
+        "period": "2022 - 2027",
+        "description": "Focused on software engineering, algorithms, and distributed systems. Graduated with honors.",
+        "achievements": [
+          "Part of the Technical Team for AdVITya'25",
+          "Technical Co-Lead for Blockchain Club VITB"
+        ]
+      },
+      {
+        "degree": "XII",
+        "school": "Pace Junior Science College",
+        "location": "Mumbai, Maharashtra",
+        "period": "2020 - 2022",
+        "description": "Completed higher secondary education with a focus on science and mathematics."
+      },
+      {
+        "degree": "X",
+        "school": "Vibgyor High School",
+        "location": "Mumbai, Maharashtra",
+        "period": "2010 - 2020",
+        "description": "Completed schooling with a focus on science and mathematics."
+      }
+    ]
+  },
+  "projects": {
+    "title": "My Projects",
+    "subtitle": "Here are some of my recent projects that showcase my skills and expertise in various technologies.",
+    "projects": [
+      {
+        "title": "QuikNote",
+        "description": "A modern note-taking platform designed for effortless organization and productivity. It allows users to create, organize, and manage notes across multiple notebooks with favorites, and trash recovery",
+        "tags": ["React.js", "Appwrite", "TailwindCSS", "Vite"],
+        "github": "https://github.com/Leonardo1903/QuikNote",
+        "demo": "https://quiknote.leonardo1903.me/",
+        "image": "/QuikNote.png"
+      },
+      {
+        "title": "EchoVault",
+        "description": "An anonymous feedback platform designed to foster open communication and collaboration. It allows users to send and receive anonymous messages, leveraging AI-generated suggestions.",
+        "tags": ["Next.js", "Auth.js", "TailwindCSS", "MongoDB"],
+        "github": "https://github.com/Leonardo1903/EchoVault",
+        "demo": "https://echovault.leonardo1903.me/",
+        "image": "/EchoVault.png"
+      },
+      {
+        "title": "Arkive",
+        "description": "A secure cloud storage platform for managing, organizing, and sharing files effortlessly. Features intelligent file management, folder organization, advanced search, and seamless collaboration.",
+        "tags": ["Next.js", "TailwindCSS", "Clerk", "Drizzle ORM", "PostgreSQL", "ImageKit"],
+        "github": "https://github.com/Leonardo1903/Arkive",
+        "demo": "https://arkive.leonardo1903.me/",
+        "image": "/Arkive.png"
+      }
+    ]
+  },
+  "blogs": {
+    "title": "My Blogs",
+    "subtitle": "Sharing my thoughts and knowledge on various topics like web development, app development, and more.",
+    "viewAllLink": "https://blog.leonardo1903.me/",
+    "viewAllText": "View All Blogs",
+    "emptyMessage": "No blog posts found.",
+    "loadingMessage": "Loading blogs...",
+    "errorMessage": "Failed to fetch blogs"
+  },
+  "contact": {
+    "title": "Get In Touch",
+    "subtitle": "Have a project in mind or want to collaborate? Feel free to reach out!",
+    "contactInfo": {
+      "heading": "Contact Information",
+      "description": "I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.",
+      "location": {
+        "label": "Location",
+        "value": "Mumbai, Maharashtra"
+      },
+      "email": {
+        "label": "Email",
+        "value": "leonardofernandes3419@gmail.com",
+        "link": "mailto:leonardofernandes3419@gmail.com"
+      },
+      "phone": {
+        "label": "Phone",
+        "value": "+91 9820143533",
+        "link": "tel:+919820143533"
+      }
+    },
+    "form": {
+      "nameLabel": "Name",
+      "emailLabel": "Email",
+      "subjectLabel": "Subject",
+      "messageLabel": "Message",
+      "sendButton": "Send Message",
+      "sendingButton": "Sending...",
+      "successMessage": "Your message has been sent successfully! I'll get back to you soon.",
+      "errorMessage": "Failed to send message. Please try again later."
+    }
+  }
+}

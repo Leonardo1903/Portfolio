@@ -8,6 +8,7 @@ import {
   Palette,
   ChevronRight,
 } from "lucide-react";
+import content from "../../public/Data.json";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -40,77 +41,37 @@ interface SkillCategory {
 
 const skillCategories: SkillCategory[] = [
   {
-    title: " Core",
+    title: content.about.skills.core.title,
     icon: <Code className="w-6 h-6 text-amber-400" />,
-    skills: [
-      { name: "C++" },
-      { name: "Python" },
-      { name: "JavaScript" },
-      { name: "TypeScript" },
-      { name: "Rust" },
-      { name: "Git" },
-      { name: "Solidity" },
-      { name: "Postman" },
-      { name: "Figma" },
-    ],
+    skills: content.about.skills.core.skills.map((skill) => ({ name: skill })),
   },
   {
-    title: "Frontend",
+    title: content.about.skills.frontend.title,
     icon: <Palette className="w-6 h-6 text-red-400" />,
-    skills: [
-      { name: "HTML5" },
-      { name: "CSS3" },
-      { name: "React.js" },
-      { name: "Next.js" },
-      { name: "React Native" },
-      { name: "Expo" },
-      { name: "Redux" },
-      { name: "Tailwind CSS" },
-      { name: "Framer Motion" },
-    ],
+    skills: content.about.skills.frontend.skills.map((skill) => ({
+      name: skill,
+    })),
   },
   {
-    title: "Backend",
+    title: content.about.skills.backend.title,
     icon: <Database className="w-6 h-6 text-orange-400" />,
-    skills: [
-      { name: "Node.js" },
-      { name: "Express.js" },
-      { name: "Hono.js" },
-      { name: "FastAPI" },
-      { name: "MongoDB" },
-      { name: "PostgreSQL" },
-      { name: "Appwrite" },
-      { name: "GraphQL" },
-      { name: "Prisma" },
-    ],
+    skills: content.about.skills.backend.skills.map((skill) => ({
+      name: skill,
+    })),
   },
   {
-    title: "DevOps",
+    title: content.about.skills.devops.title,
     icon: <Layers className="w-6 h-6 text-orange-400" />,
-    skills: [
-      { name: "AWS" },
-      { name: "Docker" },
-      { name: "Kubernetes" },
-      { name: "Grafana" },
-      { name: "Prometheus" },
-      { name: "Jenkins" },
-      { name: "GitHub Actions" },
-      { name: "Terraform" },
-    ],
+    skills: content.about.skills.devops.skills.map((skill) => ({
+      name: skill,
+    })),
   },
   {
-    title: "Others",
+    title: content.about.skills.others.title,
     icon: <Cpu className="w-6 h-6 text-amber-400" />,
-    skills: [
-      { name: "LangChain" },
-      { name: "CrewAI" },
-      { name: "Qdrant" },
-      { name: "Neo4j" },
-      { name: "Ethereum" },
-      { name: "Solana" },
-      { name: "Hardhat" },
-      { name: "Foundry" },
-    ],
+    skills: content.about.skills.others.skills.map((skill) => ({
+      name: skill,
+    })),
   },
 ];
 
@@ -135,7 +96,7 @@ export default function About() {
             variants={fadeIn}
             className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 bg-clip-text text-transparent"
           >
-            About Me
+            {content.about.title}
           </motion.h2>
           <motion.div
             variants={fadeIn}
@@ -152,21 +113,7 @@ export default function About() {
             className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/10 max-w-2xl w-full text-center"
           >
             <h3 className="text-2xl font-semibold text-white mb-6">Who I Am</h3>
-            <p className="text-gray-300 text-justify">
-              As a software engineer, I architect and build high-impact digital
-              solutions that bridge the gap between user needs and cutting-edge
-              technology. I specialize in developing full-stack web
-              applications, intuitive mobile apps, and pioneering the next
-              generation of the internet with Web3 and intelligent AI agents. 
-              <br/>
-              I
-              am driven by complex challenges and a commitment to continuous
-              learning, always seeking to master new tools and frameworks. My
-              goal is not just to write code, but to engineer meaningful
-              experiences that solve real-world problems. I am actively seeking
-              opportunities to collaborate with forward-thinking teams on
-              ambitious projects.
-            </p>
+            <p className="text-gray-300 text-justify">{content.about.bio}</p>
           </motion.div>
         </div>
 

@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
 import Image from "next/image";
+import content from "../../public/Data.json";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -22,42 +23,7 @@ const staggerContainer = {
   },
 };
 
-const projects = [
-  {
-    title: "QuikNote",
-    description:
-      "A modern note-taking platform designed for effortless organization and productivity. It allows users to create, organize, and manage notes across multiple notebooks with favorites, and trash recovery",
-    image: "/QuikNote.png",
-    tags: ["React.js", "Appwrite", "TailwindCSS", "Vite"],
-    github: "https://github.com/Leonardo1903/QuikNote",
-    demo: "https://quiknote.leonardo1903.me/",
-  },
-  {
-    title: "EchoVault",
-    description:
-      "An anonymous feedback platform designed to foster open communication and collaboration. It allows users to send and receive anonymous messages, leveraging AI-generated suggestions.",
-    image: "/EchoVault.png",
-    tags: ["Next.js", "Auth.js", "TailwindCSS", "MongoDB"],
-    github: "https://github.com/Leonardo1903/EchoVault",
-    demo: "https://echovault.leonardo1903.me/",
-  },
-  {
-    title: "Arkive",
-    description:
-      "A secure cloud storage platform for managing, organizing, and sharing files effortlessly. Features intelligent file management, folder organization, advanced search, and seamless collaboration.",
-    image: "/Arkive.png",
-    tags: [
-      "Next.js",
-      "TailwindCSS",
-      "Clerk",
-      "Drizzle ORM",
-      "PostgreSQL",
-      "ImageKit",
-    ],
-    github: "https://github.com/Leonardo1903/Arkive",
-    demo: "https://arkive.leonardo1903.me/",
-  },
-];
+const projects = content.projects.projects;
 
 export default function Projects() {
   return (
@@ -79,7 +45,7 @@ export default function Projects() {
             variants={fadeIn}
             className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 bg-clip-text text-transparent"
           >
-            My Projects
+            {content.projects.title}
           </motion.h2>
           <motion.div
             variants={fadeIn}
@@ -89,8 +55,7 @@ export default function Projects() {
             variants={fadeIn}
             className="text-gray-300 max-w-2xl mx-auto"
           >
-            Here are some of my recent projects that showcase my skills and
-            expertise in various technologies.
+            {content.projects.subtitle}
           </motion.p>
         </motion.div>
 

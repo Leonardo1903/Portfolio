@@ -3,15 +3,9 @@ import { useEffect, useState } from "react";
 import Blob from "@/components/Blob";
 import SocialLinks from "@/components/SocialLinks";
 import { motion } from "framer-motion";
+import content from "../../public/Data.json";
 
 type TypingText = string;
-
-const typingTexts: TypingText[] = [
-  "Full Stack Engineer",
-  "UI/UX Designer",
-  "Web3 Developer",
-  "Agentic-AI Developer",
-];
 
 export default function Hero() {
   const [currentText, setCurrentText] = useState<string>("");
@@ -19,13 +13,17 @@ export default function Hero() {
   const [typing, setTyping] = useState<boolean>(true);
   const [charIndex, setCharIndex] = useState<number>(0);
 
+  const typingTexts: TypingText[] = content.hero.roles;
+
   const handleTypingEffect = (): (() => void) => {
     let timeout: NodeJS.Timeout;
-    
+
     if (typing) {
       if (charIndex < typingTexts[currentIndex].length) {
         timeout = setTimeout(() => {
-          setCurrentText((prev: string) => prev + typingTexts[currentIndex][charIndex]);
+          setCurrentText(
+            (prev: string) => prev + typingTexts[currentIndex][charIndex],
+          );
           setCharIndex((prev: number) => prev + 1);
         }, 80);
       } else {
@@ -39,7 +37,7 @@ export default function Hero() {
         setTyping(true);
       }, 600);
     }
-    
+
     return (): void => clearTimeout(timeout);
   };
 
@@ -71,11 +69,10 @@ export default function Hero() {
             }}
           >
             <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
-              Hi, I&apos;m Leonardo Fernandes
+              {content.hero.title}
             </h1>
             <p className="text-lg text-gray-300 mb-4">
-              I transform ideas into exceptional digital experiences that drive
-              business growth.
+              {content.hero.subtitle}
             </p>
             <span className="inline-block h-10 md:h-14">
               <span className="text-2xl md:text-3xl font-semibold bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 bg-clip-text text-transparent">

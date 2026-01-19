@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Mail, MapPin, Phone, Send } from "lucide-react";
 import { useState, useRef, ChangeEvent, FormEvent } from "react";
 import emailjs from "@emailjs/browser";
+import content from "../../public/Data.json";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -43,7 +44,9 @@ export default function Contact() {
   const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
   const [submitError, setSubmitError] = useState<string>("");
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): void => {
     const { name, value } = e.target;
     setFormData((prev: FormData) => ({ ...prev, [name]: value }));
   };
@@ -59,7 +62,7 @@ export default function Contact() {
           process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "",
           process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "",
           formRef.current,
-          process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || ""
+          process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "",
         )
         .then((result) => {
           console.log("Email sent successfully:", result.text);
@@ -98,7 +101,7 @@ export default function Contact() {
             variants={fadeIn}
             className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 bg-clip-text text-transparent"
           >
-            Get In Touch
+            {content.contact.title}
           </motion.h2>
           <motion.div
             variants={fadeIn}
@@ -108,8 +111,7 @@ export default function Contact() {
             variants={fadeIn}
             className="text-gray-300 max-w-2xl mx-auto"
           >
-            Have a project in mind or want to collaborate? Feel free to reach
-            out!
+            {content.contact.subtitle}
           </motion.p>
         </motion.div>
 
@@ -123,11 +125,10 @@ export default function Contact() {
           >
             <motion.div variants={fadeIn}>
               <h3 className="text-2xl font-semibold text-white mb-6">
-                Contact Information
+                {content.contact.contactInfo.heading}
               </h3>
               <p className="text-gray-300 mb-8">
-                I&apos;m always open to discussing new projects, creative ideas, or
-                opportunities to be part of your vision.
+                {content.contact.contactInfo.description}
               </p>
             </motion.div>
 
@@ -137,8 +138,12 @@ export default function Contact() {
                   <MapPin className="w-5 h-5 text-red-400" />
                 </div>
                 <div>
-                  <h4 className="text-white font-medium mb-1">Location</h4>
-                  <p className="text-gray-300">Mumbai, Maharashtra</p>
+                  <h4 className="text-white font-medium mb-1">
+                    {content.contact.contactInfo.location.label}
+                  </h4>
+                  <p className="text-gray-300">
+                    {content.contact.contactInfo.location.value}
+                  </p>
                 </div>
               </div>
 
@@ -147,12 +152,14 @@ export default function Contact() {
                   <Mail className="w-5 h-5 text-orange-400" />
                 </div>
                 <div>
-                  <h4 className="text-white font-medium mb-1">Email</h4>
+                  <h4 className="text-white font-medium mb-1">
+                    {content.contact.contactInfo.email.label}
+                  </h4>
                   <a
-                    href="mailto:leonardofernandes3419@gmail.com"
+                    href={content.contact.contactInfo.email.link}
                     className="text-gray-300 hover:text-red-400 transition-colors"
                   >
-                    leonardofernandes3419@gmail.com
+                    {content.contact.contactInfo.email.value}
                   </a>
                 </div>
               </div>
@@ -162,12 +169,14 @@ export default function Contact() {
                   <Phone className="w-5 h-5 text-amber-400" />
                 </div>
                 <div>
-                  <h4 className="text-white font-medium mb-1">Phone</h4>
+                  <h4 className="text-white font-medium mb-1">
+                    {content.contact.contactInfo.phone.label}
+                  </h4>
                   <a
-                    href="tel:+919820143533"
+                    href={content.contact.contactInfo.phone.link}
                     className="text-gray-300 hover:text-red-400 transition-colors"
                   >
-                    +91 9820143533
+                    {content.contact.contactInfo.phone.value}
                   </a>
                 </div>
               </div>
@@ -191,7 +200,7 @@ export default function Contact() {
                     htmlFor="name"
                     className="block text-sm font-medium text-gray-300 mb-1"
                   >
-                    Name
+                    {content.contact.form.nameLabel}
                   </label>
                   <input
                     type="text"
@@ -208,7 +217,7 @@ export default function Contact() {
                     htmlFor="email"
                     className="block text-sm font-medium text-gray-300 mb-1"
                   >
-                    Email
+                    {content.contact.form.emailLabel}
                   </label>
                   <input
                     type="email"
@@ -227,7 +236,7 @@ export default function Contact() {
                   htmlFor="subject"
                   className="block text-sm font-medium text-gray-300 mb-1"
                 >
-                  Subject
+                  {content.contact.form.subjectLabel}
                 </label>
                 <input
                   type="text"
@@ -245,7 +254,7 @@ export default function Contact() {
                   htmlFor="message"
                   className="block text-sm font-medium text-gray-300 mb-1"
                 >
-                  Message
+                  {content.contact.form.messageLabel}
                 </label>
                 <textarea
                   id="message"
@@ -289,26 +298,25 @@ export default function Contact() {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
                     </svg>
-                    Sending...
+                    {content.contact.form.sendingButton}
                   </span>
                 ) : (
                   <span className="flex items-center">
                     <Send className="w-4 h-4 mr-2" />
-                    Send Message
+                    {content.contact.form.sendButton}
                   </span>
                 )}
               </button>
 
               {submitSuccess && (
                 <div className="mt-4 p-3 bg-green-500/20 border border-green-500/50 rounded-lg text-green-400 text-sm">
-                  Your message has been sent successfully! I&apos;ll get back to you
-                  soon.
+                  {content.contact.form.successMessage}
                 </div>
               )}
 
               {submitError && (
                 <div className="mt-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm">
-                  {submitError}
+                  {submitError || content.contact.form.errorMessage}
                 </div>
               )}
             </form>

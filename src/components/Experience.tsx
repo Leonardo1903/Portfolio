@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import ExperienceCard from "@/components/ExperienceCard";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import content from "../../public/Data.json";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -40,53 +41,15 @@ interface EducationItem {
   achievements?: string[];
 }
 
-const experiences: ExperienceItem[] = [
-  {
-    title: "SDE Intern",
-    company: "myresQR.life · Internship",
-    location: "India · Remote",
-    period: "Nov 2024 - Feb 2025 · 4 mos",
-    description:
-      "As a Software Development Engineer (SDE) intern at myresQR.life, I focused on enhancing the company's digital platforms. My work involved frontend development using JavaScript, React.js, Tailwind CSS, ShadCN, Recoil, and Axios. I developed and managed the admin portal, dealer portal, post-scan portal, user registration system, and main website.",
-    achievements: [
-      "Sharpened frontend programming abilities and gained a thorough understanding of building user-focused web applications",
-      "Developed and managed the admin portal, dealer portal, post-scan portal, user registration system, and main website",
-      "Implemented state management with Recoil and efficient API handling with Axios",
-      "Enhanced UI/UX using Tailwind CSS and ShadCN components",
-    ],
-  },
-];
-
-const education: EducationItem[] = [
-  {
-    degree: "Int Mtech in Computer Science Specialization in Cyber Security",
-    school: "Vellore Institute of Technology",
-    location: "Bhopal, Madhya Pradesh",
-    period: "2022 - 2027",
-    description:
-      "Focused on software engineering, algorithms, and distributed systems. Graduated with honors.",
-    achievements: [
-      "Part of the Technical Team for AdVITya'25",
-      "Technical Co-Lead for Blockchain Club VITB",
-    ],
-  },
-  {
-    degree: "XII ",
-    school: "Pace Junior Science College",
-    location: "Mumbai, Maharashtra",
-    period: "2020 - 2022",
-    description:
-      "Completed higher secondary education with a focus on science and mathematics. ",
-  },
-  {
-    degree: "X ",
-    school: "Vibgyor High School",
-    location: "Mumbai, Maharashtra",
-    period: "2010 - 2020",
-    description:
-      "Completed schooling with a focus on science and mathematics. ",
-  },
-];
+const experiences: ExperienceItem[] = content.experience.experiences;
+const education: EducationItem[] = content.experience.education.map((edu) => ({
+  degree: edu.degree,
+  school: edu.school,
+  location: edu.location,
+  period: edu.period,
+  description: edu.description,
+  achievements: edu.achievements,
+}));
 
 export default function Experience() {
   return (

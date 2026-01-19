@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { ExternalLink, Calendar, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import content from "../../public/Data.json";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -83,13 +84,13 @@ export default function Blogs() {
             headers: {
               "Content-Type": "application/json",
             },
-          }
+          },
         );
         const data = response.data;
 
         const posts =
           data?.data?.publication?.posts?.edges?.map(
-            (edge: BlogEdge) => edge.node
+            (edge: BlogEdge) => edge.node,
           ) || [];
         setBlogs(posts);
       } catch (err) {
@@ -134,7 +135,7 @@ export default function Blogs() {
             variants={fadeIn}
             className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 bg-clip-text text-transparent"
           >
-            My Blogs
+            {content.blogs.title}
           </motion.h2>
           <motion.div
             variants={fadeIn}
@@ -144,8 +145,7 @@ export default function Blogs() {
             variants={fadeIn}
             className="text-gray-300 max-w-2xl mx-auto"
           >
-            Sharing my thoughts and knowledge on various topics like web
-            development, app development, and more.
+            {content.blogs.subtitle}
           </motion.p>
         </motion.div>
 
@@ -169,11 +169,11 @@ export default function Blogs() {
           </div>
         ) : error ? (
           <div className="text-center text-gray-300 py-12">
-            <p>{error}</p>
+            <p>{content.blogs.errorMessage}</p>
           </div>
         ) : blogs.length === 0 ? (
           <div className="text-center text-gray-300 py-12">
-            <p>No blog posts found.</p>
+            <p>{content.blogs.emptyMessage}</p>
           </div>
         ) : (
           <>
@@ -240,13 +240,11 @@ export default function Blogs() {
               className="mt-16 flex justify-center"
             >
               <Button
-                onClick={() =>
-                  window.open(`https://blog.leonardo1903.me/`, "_blank")
-                }
+                onClick={() => window.open(content.blogs.viewAllLink, "_blank")}
                 className="bg-gradient-to-r from-red-500 to-amber-500 hover:from-red-600 hover:to-amber-600 text-white px-10 py-6 text-lg rounded-full font-medium transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 flex items-center gap-3"
                 size="lg"
               >
-                View All Blogs
+                {content.blogs.viewAllText}
                 <ExternalLink className="w-5 h-5" />
               </Button>
             </motion.div>
