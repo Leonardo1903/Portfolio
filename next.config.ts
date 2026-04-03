@@ -7,7 +7,6 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "cdn.hashnode.com",
-        pathname: "/res/hashnode/image/**",
       },
     ],
   },
