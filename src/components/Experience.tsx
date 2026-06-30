@@ -1,30 +1,11 @@
 "use client";
+
 import { motion } from "framer-motion";
 import ExperienceCard from "@/components/ExperienceCard";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import content from "../../public/Data.json";
 import Container from "@/components/ui/Container";
 
-const fadeIn = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6 },
-  },
-};
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-};
-
-interface ExperienceItem {
+export interface ExperienceItem {
   title: string;
   company: string;
   location: string;
@@ -33,7 +14,7 @@ interface ExperienceItem {
   achievements?: string[];
 }
 
-interface EducationItem {
+export interface EducationItem {
   degree: string;
   school: string;
   location: string;
@@ -42,83 +23,145 @@ interface EducationItem {
   achievements?: string[];
 }
 
-const experiences: ExperienceItem[] = content.experience.experiences;
-const education: EducationItem[] = content.experience.education.map((edu) => ({
-  degree: edu.degree,
-  school: edu.school,
-  location: edu.location,
-  period: edu.period,
-  description: edu.description,
-  achievements: edu.achievements,
-}));
+interface ExperienceProps {
+  experiences: ExperienceItem[];
+  education: EducationItem[];
+}
 
-export default function Experience() {
+const fadeIn = {
+  hidden: {
+    opacity: 0,
+    y: 20,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+    },
+  },
+};
+
+const staggerContainer = {
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+export default function Experience({
+  experiences,
+  education,
+}: ExperienceProps) {
   return (
-    <div className="w-full min-h-screen bg-[#09090C] py-16 relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-black/70 backdrop-blur-2xl" />
-        <div className="absolute top-1/3 left-1/4 w-1/2 h-1/3 bg-gradient-to-r from-red-400/20 via-orange-400/10 to-amber-400/10 blur-3xl rounded-full opacity-40" />
-        <div className="absolute bottom-0 right-0 w-1/3 h-1/4 bg-gradient-to-tl from-amber-400/15 to-transparent blur-2xl rounded-full opacity-20" />
-      </div>
-
-      <Container className="relative z-10">
+    <section className="relative z-10 py-24">
+      <Container>
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true }}
+          variants={fadeIn}
           className="mb-16 text-center"
         >
-          <motion.h2
-            variants={fadeIn}
-            className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 bg-clip-text text-transparent"
-          >
-            Experience & Education
-          </motion.h2>
-          <motion.div
-            variants={fadeIn}
-            className="w-24 h-1 bg-gradient-to-r from-red-500 to-amber-500 mx-auto mb-8 rounded-full"
-          />
+          <p className="mb-4 text-sm uppercase tracking-[0.3em] text-orange-400">
+            Journey & Experience
+          </p>
+
+          <h2 className="text-3xl font-bold text-white md:text-4xl">
+            My Journey So Far
+          </h2>
+
+          <p className="mx-auto mt-6 max-w-3xl text-zinc-400">
+            The experiences and education that have shaped my journey as a
+            software engineer and product builder.
+          </p>
         </motion.div>
 
         <Tabs defaultValue="experience" className="w-full">
-          <TabsList className="mx-auto mb-8 flex justify-center gap-2 bg-white/5 backdrop-blur-xl">
+          <TabsList className="mx-auto mb-10 flex justify-center gap-2 bg-white/5 backdrop-blur-xl">
             <TabsTrigger
               value="experience"
-              className="text-lg font-semibold px-6 py-2 rounded-lg transition
-      bg-white/10 backdrop-blur-md text-white
-      data-[state=active]:bg-white/20
-      data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-400 data-[state=active]:via-orange-400 data-[state=active]:to-amber-400
-      data-[state=active]:bg-clip-text data-[state=active]:text-transparent
-      focus:outline-none"
+              className="
+                rounded-lg
+                bg-white/10
+                px-6
+                py-2
+                text-lg
+                font-semibold
+                text-white
+                transition
+                backdrop-blur-md
+                data-[state=active]:bg-gradient-to-r
+                data-[state=active]:from-red-400
+                data-[state=active]:via-orange-400
+                data-[state=active]:to-amber-400
+                data-[state=active]:bg-clip-text
+                data-[state=active]:text-transparent
+              "
             >
-              Experience
+              Professional Experience
             </TabsTrigger>
+
             <TabsTrigger
               value="education"
-              className="text-lg font-semibold px-6 py-2 rounded-lg transition
-      bg-white/10 backdrop-blur-md text-white
-      data-[state=active]:bg-white/20
-      data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-400 data-[state=active]:via-orange-400 data-[state=active]:to-amber-400
-      data-[state=active]:bg-clip-text data-[state=active]:text-transparent
-      focus:outline-none"
+              className="
+                rounded-lg
+                bg-white/10
+                px-6
+                py-2
+                text-lg
+                font-semibold
+                text-white
+                transition
+                backdrop-blur-md
+                data-[state=active]:bg-gradient-to-r
+                data-[state=active]:from-red-400
+                data-[state=active]:via-orange-400
+                data-[state=active]:to-amber-400
+                data-[state=active]:bg-clip-text
+                data-[state=active]:text-transparent
+              "
             >
               Education
             </TabsTrigger>
           </TabsList>
+
+          {/* EXPERIENCE */}
+
           <TabsContent value="experience">
             <div className="relative">
-              <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-red-500 via-orange-500 to-amber-500 transform md:translate-x-[-50%] z-0"></div>
+              <div
+                className="
+                  absolute
+                  bottom-0
+                  left-0
+                  top-0
+                  w-px
+                  bg-gradient-to-b
+                  from-red-500
+                  via-orange-500
+                  to-amber-500
+                  md:left-1/2
+                  md:-translate-x-1/2
+                "
+              />
+
               <motion.div
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
+                viewport={{ once: true }}
                 variants={staggerContainer}
                 className="relative z-10"
               >
-                {experiences.map((exp: ExperienceItem, index: number) => (
+                {experiences.map((experience, index) => (
                   <ExperienceCard
-                    key={index}
-                    exp={exp}
+                    key={`${experience.company}-${index}`}
+                    exp={experience}
                     fadeIn={fadeIn}
                     index={index}
                     align={index % 2 === 0 ? "right" : "left"}
@@ -127,26 +170,44 @@ export default function Experience() {
               </motion.div>
             </div>
           </TabsContent>
+
+          {/* EDUCATION */}
+
           <TabsContent value="education">
             <div className="relative">
-              <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-red-500 via-orange-500 to-amber-500 transform md:translate-x-[-50%] z-0"></div>
+              <div
+                className="
+                  absolute
+                  bottom-0
+                  left-0
+                  top-0
+                  w-px
+                  bg-gradient-to-b
+                  from-red-500
+                  via-orange-500
+                  to-amber-500
+                  md:left-1/2
+                  md:-translate-x-1/2
+                "
+              />
+
               <motion.div
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
+                viewport={{ once: true }}
                 variants={staggerContainer}
                 className="relative z-10"
               >
-                {education.map((edu: EducationItem, index: number) => (
+                {education.map((item, index) => (
                   <ExperienceCard
-                    key={index}
+                    key={`${item.school}-${index}`}
                     exp={{
-                      title: edu.degree,
-                      company: edu.school,
-                      location: edu.location,
-                      period: edu.period,
-                      description: edu.description,
-                      achievements: edu.achievements,
+                      title: item.degree,
+                      company: item.school,
+                      location: item.location,
+                      period: item.period,
+                      description: item.description,
+                      achievements: item.achievements,
                     }}
                     fadeIn={fadeIn}
                     index={index}
@@ -158,6 +219,6 @@ export default function Experience() {
           </TabsContent>
         </Tabs>
       </Container>
-    </div>
+    </section>
   );
 }
