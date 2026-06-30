@@ -1,163 +1,161 @@
 "use client";
+
 import { motion } from "framer-motion";
-import { Code, Cpu, Database, Layers, Palette } from "lucide-react";
-import content from "../../public/Data.json";
+import Container from "@/components/ui/Container";
 import { Badge } from "@/components/ui/badge";
+import { Brain, Boxes, Rocket } from "lucide-react";
 
-const fadeIn = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6 },
-  },
-};
+const technologies = [
+  "TypeScript",
+  "Python",
+  "Next.js",
+  "React",
+  "Node.js",
+  "FastAPI",
+  "PostgreSQL",
+  "Docker",
+  "AWS",
+  "Redis",
+  "LangGraph",
+  "Qdrant",
+  "TailwindCSS",
+  "React Native",
+];
 
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-    },
-  },
-};
-
-interface Skill {
-  name: string;
-}
-
-interface SkillCategory {
-  title: string;
-  icon: React.ReactNode;
-  skills: Skill[];
-}
-
-const skillCategories: SkillCategory[] = [
+const focusAreas = [
   {
-    title: content.about.skills.core.title,
-    icon: <Code className="w-6 h-6 text-amber-400" />,
-    skills: content.about.skills.core.skills.map((skill) => ({ name: skill })),
+    title: "SaaS Products",
+    icon: <Rocket className="w-6 h-6 text-orange-400" />,
+    description:
+      "Building scalable applications, multi-tenant platforms and developer tools.",
   },
   {
-    title: content.about.skills.frontend.title,
-    icon: <Palette className="w-6 h-6 text-red-400" />,
-    skills: content.about.skills.frontend.skills.map((skill) => ({
-      name: skill,
-    })),
+    title: "AI Systems",
+    icon: <Brain className="w-6 h-6 text-orange-400" />,
+    description: "Building with LLMs, RAG pipelines and agentic workflows.",
   },
   {
-    title: content.about.skills.backend.title,
-    icon: <Database className="w-6 h-6 text-orange-400" />,
-    skills: content.about.skills.backend.skills.map((skill) => ({
-      name: skill,
-    })),
-  },
-  {
-    title: content.about.skills.devops.title,
-    icon: <Layers className="w-6 h-6 text-orange-400" />,
-    skills: content.about.skills.devops.skills.map((skill) => ({
-      name: skill,
-    })),
-  },
-  {
-    title: content.about.skills.others.title,
-    icon: <Cpu className="w-6 h-6 text-amber-400" />,
-    skills: content.about.skills.others.skills.map((skill) => ({
-      name: skill,
-    })),
+    title: "Backend Systems",
+    icon: <Boxes className="w-6 h-6 text-orange-400" />,
+    description:
+      "Designing scalable services, APIs and distributed architectures.",
   },
 ];
 
 export default function About() {
   return (
-    <div className="w-full min-h-screen bg-[#09090C] py-16 px-4 md:px-8 relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="pointer-events-none absolute inset-0 z-0">
+    <section className="relative overflow-hidden bg-[#09090C] py-20">
+      {/* Background */}
+      <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-black/70 backdrop-blur-2xl" />
-        <div className="absolute top-1/4 right-1/4 w-1/2 h-1/3 bg-gradient-to-r from-red-400/20 via-orange-400/10 to-amber-400/10 blur-3xl rounded-full opacity-40" />
-        <div className="absolute bottom-0 left-0 w-1/3 h-1/4 bg-gradient-to-tr from-amber-400/15 to-transparent blur-2xl rounded-full opacity-20" />
+
+        <div className="absolute right-1/4 top-1/4 h-72 w-72 rounded-full bg-orange-500/10 blur-[120px]" />
+
+        <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-red-500/10 blur-[120px]" />
       </div>
 
-      <div className="max-w-[1600px] mx-auto relative z-10">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="mb-16 text-center"
-        >
-          <motion.h2
-            variants={fadeIn}
-            className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 bg-clip-text text-transparent"
-          >
-            {content.about.title}
-          </motion.h2>
+      <Container>
+        <div className="relative z-10">
+          {/* Header */}
           <motion.div
-            variants={fadeIn}
-            className="w-24 h-1 bg-gradient-to-r from-red-500 to-amber-500 mx-auto mb-8 rounded-full"
-          />
-        </motion.div>
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mx-auto max-w-4xl text-center"
+          >
+            <p className="mb-4 text-sm uppercase tracking-[0.3em] text-orange-400">
+              About
+            </p>
 
-        <div className="flex flex-col items-center justify-center mb-20">
+            <h2 className="text-3xl font-bold leading-tight text-white md:text-4xl">
+              Building software that scales
+              <br />
+              from idea to production.
+            </h2>
+
+            <div className="mx-auto mt-8 max-w-3xl">
+              <p className="text-lg leading-relaxed text-zinc-400">
+                I build software across the stack—from modern user experiences
+                to scalable backend systems. My interests lie at the
+                intersection of SaaS, AI systems and backend architecture, where
+                product thinking meets engineering execution.
+              </p>
+            </div>
+          </motion.div>
+          <div className="mt-14 grid gap-6 md:grid-cols-3">
+            {focusAreas.map((area) => (
+              <motion.div
+                key={area.title}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="
+        flex
+        flex-col
+        rounded-3xl
+        border
+        border-white/10
+        bg-white/[0.04]
+        p-8
+        backdrop-blur-xl
+        transition-all
+        duration-300
+        hover:-translate-y-1
+        hover:border-orange-500/30
+        hover:bg-white/[0.07]
+      "
+              >
+                <div className="mb-5 flex items-center gap-3">
+                  {area.icon}
+
+                  <h3 className="text-xl font-bold leading-tight text-white">
+                    {area.title}
+                  </h3>
+                </div>
+
+                <p className="leading-relaxed text-zinc-400">
+                  {area.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
           <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeIn}
-            className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/10 max-w-2xl w-full text-center"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mt-16"
           >
-            <h3 className="text-2xl font-semibold text-white mb-6">Who I Am</h3>
-            <p className="text-gray-300 text-justify">{content.about.bio}</p>
+            <h3 className="mb-8 text-center text-2xl font-bold text-white">
+              Toolbox
+            </h3>
+
+            <div className="mx-auto flex max-w-3xl flex-wrap justify-center gap-3">
+              {technologies.map((tech) => (
+                <Badge
+                  key={tech}
+                  variant="outline"
+                  className="
+                    border-white/10
+                    bg-white/5
+                    px-4
+                    py-2
+                    text-zinc-300
+                    transition-all
+                    duration-300
+                    hover:border-orange-500/30
+                    hover:bg-white/10
+                  "
+                >
+                  {tech}
+                </Badge>
+              ))}
+            </div>
           </motion.div>
         </div>
-
-        <motion.h3
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={fadeIn}
-          className="text-2xl md:text-3xl font-semibold text-white mb-10 text-center"
-        >
-          My Skills & Technologies
-        </motion.h3>
-
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={staggerContainer}
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
-        >
-          {skillCategories.map((category, index) => (
-            <motion.div
-              key={index}
-              variants={fadeIn}
-              className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 shadow-lg border border-white/10"
-            >
-              <div className="flex items-center mb-4 pb-3 border-b border-white/10">
-                <div className="p-2 rounded-full bg-gradient-to-br from-red-500/20 to-amber-500/20 mr-3">
-                  {category.icon}
-                </div>
-                <h4 className="text-lg font-semibold text-white">
-                  {category.title}
-                </h4>
-              </div>
-
-              <motion.div variants={staggerContainer} className="space-y-2">
-                {category.skills.map((skill, idx) => (
-                  <Badge
-                    key={idx}
-                    variant="outline"
-                    className="bg-white/5 text-gray-300 border-white/10 hover:bg-white/10"
-                  >
-                    {skill.name}
-                  </Badge>
-                ))}
-              </motion.div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
-    </div>
+      </Container>
+    </section>
   );
 }

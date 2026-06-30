@@ -1,10 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
+import Navbar from "@/components/Navbar";
 import Preloader from "@/components/ui/preloader";
 import { AnimatePresence } from "framer-motion";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
-import Experience from "@/components/Experience";
 import Projects from "@/components/Projects";
 import Blogs from "@/components/Blogs";
 import Contact from "@/components/Contact";
@@ -31,7 +31,6 @@ function preloadImage(src: string) {
 export default function Home() {
   const [progress, setProgress] = useState(0);
   const [loader, setLoader] = useState(true);
-  const [blogImages, setBlogImages] = useState<string[]>([]);
 
   useEffect(() => {
     let isMounted = true;
@@ -77,10 +76,10 @@ export default function Home() {
         }).then((res) => res.json())) as HashnodeResponse;
         const edges = json?.data?.publication?.posts?.edges ?? [];
         blogCovers =
-          edges
+          (edges
             .map((edge) => edge?.node?.coverImage?.url)
-            .filter(Boolean) as string[] || [];
-        if (isMounted) setBlogImages(blogCovers);
+            .filter(Boolean) as string[]) || [];
+        // if (isMounted) setBlogImages(blogCovers);
         return blogCovers;
       } catch {
         return [];
@@ -104,7 +103,7 @@ export default function Home() {
           preloadImage(src).then(() => {
             loaded += 1;
             if (isMounted) setProgress(Math.round((loaded / total) * 100));
-          })
+          }),
         ),
         fontPromise,
       ]);
@@ -122,29 +121,17 @@ export default function Home() {
 
   return (
     <>
+      <Navbar />
       <AnimatePresence mode="wait">
         {loader && <Preloader progress={progress} />}
       </AnimatePresence>
       {!loader && (
         <>
-          <section id="home">
-            <Hero />
-          </section>
-          <section id="about">
-            <About />
-          </section>
-          <section id="experience">
-            <Experience />
-          </section>
-          <section id="projects">
-            <Projects />
-          </section>
-          <section id="blogs">
-            <Blogs />
-          </section>
-          <section id="contact">
-            <Contact />
-          </section>
+          <Hero />
+          <About />
+          <Projects />
+          <Blogs />
+          <Contact />
         </>
       )}
     </>

@@ -1,0 +1,502 @@
+---
+title: "How Retrieval-Augmented Generation Boosts AI Results: An In-Depth Look"
+datePublished: 2025-06-06T08:35:21.234Z
+cuid: cmbkjvhn6000q09l8a83n29cg
+slug: how-retrieval-augmented-generation-boosts-ai-results-an-in-depth-look
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1749198850100/1a16a322-4a07-4cd7-b9cc-af4997ee0923.png
+tags: generative-ai, rag, genai-applications, chaicode, agentic-ai, genai-cohort
+
+---
+
+You built a RAG chatbot. You chunked your documents, embedded them, shoved them into a vector store, and wired it to an LLM. It works — mostly. But it hallucinates on questions it should know, misses relevant context that's clearly in your documents, and sometimes returns confidently wrong answers that trace back to retrieved garbage.
+ 
+The standard advice is "tune your chunk size" or "try a different embedding model." Sometimes that helps. Usually the problem is more fundamental: you're using Naive RAG for a problem that needs something more sophisticated.
+ 
+RAG isn't one thing. It's a design space with at least nine meaningfully different architectures, each suited to specific failure modes. Most developers only ever learn the basic version — and then wonder why production results don't match the demo.
+ 
+This post maps the entire design space, explains when each approach earns its complexity, and gives you a framework for diagnosing which variant your problem actually needs.
+ 
+---
+ 
+### Why RAG Exists — And Why Basic RAG Often Isn't Enough
+ 
+The core problem RAG solves is straightforward: language models have static, bounded knowledge. They don't know about your internal docs, recent events, proprietary data, or anything after their training cutoff. RAG patches this by retrieving relevant external context at query time and including it in the prompt.
+ 
+The basic version works. For demos. For small, clean, well-organized knowledge bases. For questions that map cleanly to specific chunks of text.
+ 
+It breaks down in four specific ways that most production systems encounter:
+ 
+**Retrieval precision failure:** The vector search returns chunks that are semantically similar to the query but don't actually answer it. You ask about the refund policy for international orders; you get chunks about the general refund policy, international shipping rates, and order tracking. Individually irrelevant, collectively misleading.
+ 
+**Query-document vocabulary mismatch:** Users phrase questions in natural language ("what do I do if my package never showed up?"); your documents use formal language ("procedures for lost shipment claims"). The embedding similarity is low despite high semantic relevance. The right chunk doesn't get retrieved.
+ 
+**Multi-hop reasoning failure:** The answer requires connecting information across multiple documents. "Which of our products are available in the EU but not the US, and what's the regulatory basis?" isn't answerable from any single chunk — it requires retrieval, synthesis, and reasoning across several sources.
+ 
+**Hallucination from irrelevant retrieval:** The model receives retrieved context that doesn't actually answer the question. Rather than saying "I don't know," it confabulates an answer that sounds consistent with the retrieved noise. This is worse than no retrieval at all.
+ 
+Each of these failure modes has a corresponding RAG variant designed to address it. Let's go through them.
+ 
+---
+ 
+### The RAG Taxonomy
+ 
+#### Naive RAG — The Baseline
+ 
+The implementation you already know:
+ 
+```python
+from anthropic import Anthropic
+import numpy as np
+ 
+client = Anthropic()
+ 
+def naive_rag(query: str, vector_store, top_k: int = 3) -> str:
+    # 1. Embed the query
+    query_embedding = embed(query)
+    
+    # 2. Retrieve top-k similar chunks
+    chunks = vector_store.similarity_search(query_embedding, top_k=top_k)
+    
+    # 3. Stuff into prompt and generate
+    context = "\n\n".join([chunk.text for chunk in chunks])
+    
+    response = client.messages.create(
+        model="claude-sonnet-4-20250514",
+        max_tokens=1000,
+        messages=[{
+            "role": "user",
+            "content": f"Context:\n{context}\n\nQuestion: {query}"
+        }]
+    )
+    return response.content[0].text
+```
+ 
+**When it works:** Clean, well-structured knowledge base. Questions that map to specific document sections. Internal tooling where users know the domain vocabulary. Proof-of-concept work where you're validating whether RAG is the right approach at all.
+ 
+**When it breaks:** Ambiguous queries, cross-document reasoning, vocabulary mismatch between user language and document language, large noisy knowledge bases where irrelevant chunks are numerous.
+ 
+**The honest assessment:** Naive RAG is where you start, not where you stay. Treat it as a baseline to measure against, not a production architecture.
+ 
+---
+ 
+#### Advanced RAG — Fixing the Retrieval Layer
+ 
+Advanced RAG keeps the basic architecture but significantly improves what happens before and after retrieval. The core insight: bad retrieval is the most common cause of bad RAG output, and most retrieval problems are solvable without changing the generation model.
+ 
+**Pre-retrieval improvements:**
+ 
+```python
+def query_rewriting(query: str) -> str:
+    """Rewrite ambiguous queries before embedding them."""
+    response = client.messages.create(
+        model="claude-sonnet-4-20250514",
+        max_tokens=200,
+        system="Rewrite the user's question to be more specific and retrieval-friendly. "
+               "Expand acronyms, resolve pronouns, add relevant context. "
+               "Return only the rewritten question.",
+        messages=[{"role": "user", "content": query}]
+    )
+    return response.content[0].text
+ 
+def hybrid_search(query: str, vector_store, bm25_index) -> list:
+    """Combine semantic and keyword search for better recall."""
+    # Semantic search catches meaning-similar chunks
+    semantic_results = vector_store.similarity_search(embed(query), top_k=10)
+    
+    # BM25 catches exact keyword matches that semantic search misses
+    keyword_results = bm25_index.search(query, top_k=10)
+    
+    # Reciprocal Rank Fusion to combine rankings
+    return reciprocal_rank_fusion([semantic_results, keyword_results])
+```
+ 
+**Post-retrieval improvements:**
+ 
+```python
+def rerank_chunks(query: str, chunks: list) -> list:
+    """Use a cross-encoder to re-score chunk relevance after retrieval."""
+    # Cross-encoders are slower but more accurate than bi-encoders
+    # They see query + chunk together, not independently
+    scored = [(chunk, cross_encoder_score(query, chunk.text)) for chunk in chunks]
+    return [chunk for chunk, score in sorted(scored, key=lambda x: -x[1])[:3]]
+```
+ 
+The combination of query rewriting + hybrid search + reranking addresses the vocabulary mismatch and precision problems without changing your fundamental architecture.
+ 
+**When to use Advanced RAG:** When Naive RAG is getting the right documents but in the wrong order, or missing relevant documents entirely. When your knowledge base has both technical vocabulary and user-facing language that don't overlap well. This is the upgrade path for most production RAG systems before reaching for more complex variants.
+ 
+**Added complexity:** Requires a reranking model (cross-encoder), BM25 index alongside the vector store, and query preprocessing step. Manageable with libraries like `sentence-transformers` for the reranker and `rank-bm25` for keyword search.
+ 
+---
+ 
+#### Modular RAG — When Your Knowledge Base Changes
+ 
+Standard RAG is monolithic: one retriever, one generator, tightly coupled. Modular RAG separates these into independently replaceable components, connected through a defined interface.
+ 
+```python
+class RAGPipeline:
+    def __init__(self, retriever, reranker, generator):
+        self.retriever = retriever      # Swappable: vector, BM25, hybrid, graph
+        self.reranker = reranker        # Swappable: cross-encoder, LLM-based, rule-based  
+        self.generator = generator      # Swappable: Claude, GPT-4, Mistral, local model
+    
+    def run(self, query: str) -> str:
+        candidates = self.retriever.retrieve(query)
+        ranked = self.reranker.rerank(query, candidates)
+        return self.generator.generate(query, ranked)
+```
+ 
+The value isn't the abstraction for its own sake — it's the operational flexibility it enables. You can swap the retriever from vector search to a knowledge graph when your data changes structure. You can upgrade the generator model without touching retrieval. You can A/B test a new reranker against the existing one.
+ 
+**When to use Modular RAG:** Organizations with growing AI teams where different people own different components. Systems that need to evolve without full rewrites — you know the knowledge base structure will change, or you'll want to experiment with models. Anywhere you'd regret a tightly coupled architecture six months later.
+ 
+**The cost:** Interface design becomes critical. Poorly designed module boundaries create integration pain. This is a software architecture investment, not just a prompt engineering decision.
+ 
+---
+ 
+#### Corrective RAG (CRAG) — Self-Healing Retrieval
+ 
+Corrective RAG adds a validation step between retrieval and generation: the system evaluates whether what it retrieved actually answers the question, and takes corrective action if it doesn't.
+ 
+```python
+def corrective_rag(query: str, vector_store) -> str:
+    # Step 1: Initial retrieval
+    chunks = vector_store.similarity_search(embed(query), top_k=3)
+    
+    # Step 2: Grade the retrieved documents
+    relevance_scores = grade_relevance(query, chunks)
+    
+    # Step 3: Decide what to do based on grades
+    high_quality = [c for c, s in zip(chunks, relevance_scores) if s > 0.7]
+    low_quality = [c for c, s in zip(chunks, relevance_scores) if s <= 0.7]
+    
+    if len(high_quality) >= 2:
+        # Good retrieval — proceed normally
+        return generate_answer(query, high_quality)
+    
+    elif len(high_quality) == 1 and len(low_quality) > 0:
+        # Mixed quality — supplement with web search
+        web_results = web_search(query)
+        return generate_answer(query, high_quality + web_results)
+    
+    else:
+        # Poor retrieval — fall back to web search entirely
+        web_results = web_search(query)
+        if web_results:
+            return generate_answer(query, web_results)
+        else:
+            return "I don't have reliable information to answer this question."
+ 
+def grade_relevance(query: str, chunks: list) -> list[float]:
+    """Use an LLM to score each chunk's relevance to the query."""
+    scores = []
+    for chunk in chunks:
+        response = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=10,
+            system="Score the relevance of the document to the question on a scale of 0.0 to 1.0. "
+                   "Return only the number.",
+            messages=[{"role": "user", 
+                       "content": f"Question: {query}\n\nDocument: {chunk.text}"}]
+        )
+        scores.append(float(response.content[0].text.strip()))
+    return scores
+```
+ 
+The validation step catches the most dangerous RAG failure: confident generation from irrelevant retrieved context. When retrieval fails silently in Naive RAG, the model generates plausible-sounding nonsense. CRAG makes retrieval failure explicit and actionable.
+ 
+**When to use it:** High-stakes applications where a wrong answer is worse than no answer — medical information, legal documents, financial guidance, technical support. Anywhere the cost of confident misinformation is high. Systems where the knowledge base doesn't cover all possible questions and graceful degradation matters.
+ 
+**The cost:** Significantly more LLM calls (one per retrieved chunk for grading, plus the final generation). Latency increases. The grading prompt needs careful calibration — too strict and you get too many fallbacks; too loose and you're back to Naive RAG behavior.
+ 
+---
+ 
+#### Fusion RAG — Multiple Sources, One Answer
+ 
+Fusion RAG queries multiple retrieval systems in parallel and synthesizes the results. Where standard RAG retrieves from one source, Fusion RAG treats retrieval as a multi-source problem.
+ 
+```python
+def fusion_rag(query: str, sources: dict) -> str:
+    # Generate multiple query variations for better recall
+    query_variations = generate_query_variations(query, n=4)
+    
+    all_results = []
+    
+    # Retrieve from all sources in parallel
+    for variation in query_variations:
+        for source_name, retriever in sources.items():
+            results = retriever.search(variation, top_k=5)
+            all_results.extend([(doc, source_name) for doc in results])
+    
+    # Reciprocal Rank Fusion across all results
+    fused_ranking = reciprocal_rank_fusion_multi(all_results)
+    
+    # Take top results after fusion
+    top_docs = fused_ranking[:5]
+    
+    # Generate with source attribution
+    context = format_with_sources(top_docs)
+    return generate_with_attribution(query, context)
+ 
+def generate_query_variations(query: str, n: int) -> list[str]:
+    response = client.messages.create(
+        model="claude-sonnet-4-20250514",
+        max_tokens=300,
+        system=f"Generate {n} different ways to search for the answer to this question. "
+               "Each variation should emphasize different aspects. "
+               "Return as a JSON array of strings.",
+        messages=[{"role": "user", "content": query}]
+    )
+    return json.loads(response.content[0].text)
+```
+ 
+**When to use it:** Research tools that need to synthesize across multiple knowledge bases. Questions requiring information from different domains (a customer question that needs both product docs and policy docs). Any situation where the right answer lives in multiple places and single-source retrieval is systematically incomplete. Due diligence, research assistants, competitive intelligence tools.
+ 
+**The cost:** N× retrieval calls where N is the number of sources. Deduplication and conflict resolution between sources adds complexity. If sources contradict each other, the generation step needs careful prompting to surface the disagreement rather than silently picking one.
+ 
+---
+ 
+#### Agentic RAG — When Retrieval Needs to Think
+ 
+All the variants above have a fixed retrieval-then-generate flow. Agentic RAG breaks that linearity: the model decides what to retrieve, retrieves it, decides whether it needs more, retrieves again, and continues until it has enough to answer.
+ 
+```python
+def agentic_rag(query: str, tools: dict) -> str:
+    messages = [{"role": "user", "content": query}]
+    
+    tool_definitions = [
+        {
+            "name": "search_knowledge_base",
+            "description": "Search internal documentation for relevant information",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "search_query": {"type": "string", 
+                                    "description": "The search query"}
+                },
+                "required": ["search_query"]
+            }
+        },
+        {
+            "name": "search_web",
+            "description": "Search the web for current information",
+            "input_schema": {
+                "type": "object", 
+                "properties": {
+                    "query": {"type": "string"}
+                },
+                "required": ["query"]
+            }
+        }
+    ]
+    
+    # Agentic loop — model decides when it has enough context
+    while True:
+        response = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=1000,
+            tools=tool_definitions,
+            messages=messages
+        )
+        
+        # If model wants to use a tool, execute and continue
+        if response.stop_reason == "tool_use":
+            tool_results = execute_tools(response.content, tools)
+            messages.append({"role": "assistant", "content": response.content})
+            messages.append({"role": "user", "content": tool_results})
+        
+        # If model is done, return the answer
+        elif response.stop_reason == "end_turn":
+            return extract_text(response.content)
+```
+ 
+This is a meaningfully different architecture: the model isn't passively receiving retrieved context, it's actively deciding what it needs to answer the question. It can search for one thing, realize it needs something else, search again, and synthesize across multiple targeted retrievals.
+ 
+**When to use it:** Complex multi-hop questions that can't be answered from a single retrieval. Customer support agents that need to look up account data, product info, and policy docs before responding. Research tasks with open-ended scope. Any scenario where a human expert would look up several things before answering.
+ 
+**The cost:** Unpredictable latency (the loop runs until the model decides it's done). Variable cost (2–10× the API calls of basic RAG). Harder to test because the retrieval path isn't deterministic. Requires careful prompt design to prevent infinite loops and to make the termination condition clear.
+ 
+---
+ 
+#### Graph RAG — When Relationships Are the Answer
+ 
+Most RAG systems treat documents as independent chunks. Graph RAG builds a knowledge graph from your documents and uses that structure to answer questions that require following relationships.
+ 
+```python
+# Graph RAG treats entities and relationships as first-class objects
+# Rather than "find chunks similar to this query",
+# Graph RAG asks "find the subgraph relevant to this query"
+ 
+def graph_rag(query: str, knowledge_graph) -> str:
+    # Extract entities from the query
+    entities = extract_entities(query)  
+    # e.g., query "Who reports to the VP of Engineering?" → ["VP of Engineering"]
+    
+    # Find relevant subgraph
+    subgraph = knowledge_graph.get_neighborhood(
+        entities, 
+        max_hops=2,
+        relationship_types=["reports_to", "manages", "belongs_to"]
+    )
+    
+    # Convert subgraph to structured context
+    context = subgraph_to_text(subgraph)
+    
+    return generate_answer(query, context)
+```
+ 
+Graph RAG shines on questions like:
+- "What are all the services that depend on the payments microservice?"
+- "Which team members have worked on both the mobile app and the API?"
+- "What regulatory requirements apply to products sold in EU countries?"
+These questions require traversing relationships, not matching text similarity. A vector search over document chunks will struggle; a graph traversal handles it directly.
+ 
+**When to use it:** Organizational data, dependency graphs, knowledge management systems where entities have explicit relationships. Any domain where the structure of connections is as important as the content of documents. Microsoft's recent GraphRAG research and tooling has made this more accessible — worth exploring for enterprise knowledge management.
+ 
+**The cost:** Significant upfront investment in graph construction and maintenance. Graph schemas need careful design. Much less mature tooling than vector-based RAG. This is a substantial engineering project, not a weekend implementation.
+ 
+---
+ 
+#### Self RAG — Knowing What You Don't Know
+ 
+Self RAG gives the model introspective control: it decides in real-time whether to retrieve at all, evaluates whether its retrieval was useful, and assesses whether its generated answer is actually supported by the retrieved context.
+ 
+The core mechanism involves training (or prompting) the model to generate special reflection tokens that gate the retrieval and generation process:
+ 
+```
+[Retrieve?] → if YES: retrieve → [IsRel?] → if RELEVANT: use → generate → [IsSup?] → [IsUse?]
+```
+ 
+The practical version without custom training uses explicit prompting:
+ 
+```python
+def self_rag_check(query: str, vector_store) -> str:
+    # Step 1: Does this even need retrieval?
+    needs_retrieval = check_retrieval_necessity(query)
+    
+    if not needs_retrieval:
+        # Answer from parametric knowledge, no retrieval needed
+        return direct_generate(query)
+    
+    # Step 2: Retrieve
+    chunks = vector_store.similarity_search(embed(query), top_k=3)
+    
+    # Step 3: Generate with context
+    answer = generate_answer(query, chunks)
+    
+    # Step 4: Is the answer actually supported by the retrieved context?
+    is_supported = verify_support(answer, chunks, query)
+    
+    if not is_supported:
+        return "I retrieved information on this topic but couldn't generate "
+               "a well-supported answer. Please consult the source documents directly."
+    
+    return answer
+```
+ 
+**When to use it:** Systems handling a mix of question types — some answerable from the model's training, some requiring retrieval, some requiring both. Situations where you want explicit faithfulness checking — the model should only state things it can point to in retrieved context. Academic or research contexts where citation and support are critical.
+ 
+---
+ 
+### The Decision Framework
+ 
+Before picking a RAG variant, diagnose your failure mode:
+ 
+| Failure Mode | Root Cause | Fix |
+|---|---|---|
+| Right docs, wrong answer | Generation problem | Better prompting, stronger model |
+| Wrong docs retrieved | Retrieval precision | Advanced RAG (reranking, hybrid search) |
+| Right docs missing | Vocabulary mismatch | Query rewriting, hybrid BM25+semantic |
+| Confident wrong answer | Bad retrieval, no validation | Corrective RAG |
+| Multi-hop questions fail | Single-source limitation | Fusion RAG or Agentic RAG |
+| Relationship queries fail | Flat chunk structure | Graph RAG |
+| Mixed question types | One-size-fits-all retrieval | Self RAG or Modular RAG |
+| Knowledge base keeps changing | Tight coupling | Modular RAG |
+ 
+**Choose Naive RAG when:**
+- ✔ You're prototyping or validating the RAG approach
+- ✔ Your knowledge base is small, clean, and well-structured
+- ✔ Questions map cleanly to specific document sections
+- ✔ Speed and simplicity matter more than accuracy
+
+**Choose Advanced RAG when:**
+- ✔ Naive RAG is close but retrieval precision is the bottleneck
+- ✔ Your users and your documents use different vocabulary
+- ✔ You need better results without architectural changes
+
+**Choose Corrective RAG when:**
+- ✔ Wrong answers are worse than no answers
+- ✔ Your knowledge base doesn't cover all possible questions
+- ✔ You're in a high-stakes domain (medical, legal, financial)
+
+**Choose Agentic RAG when:**
+- ✔ Questions require multiple retrieval steps to answer
+- ✔ You can't predict what information will be needed upfront
+- ✔ You're comfortable with variable latency and cost
+
+**Choose Graph RAG when:**
+- ✔ Your data has explicit entity relationships
+- ✔ Questions ask about connections, dependencies, or hierarchies
+- ✔ You're willing to invest in knowledge graph construction
+
+> **The meta-rule:** Start with Naive RAG and measure your failure rate by category. The category with the highest failure rate tells you which variant to adopt. Don't upgrade speculatively — upgrade in response to measured failures.
+ 
+---
+ 
+### Key Insights
+ 
+**Retrieval quality determines everything downstream.** You can't generate a good answer from bad context. Before changing your model, your prompts, or your architecture, measure retrieval precision (are the right chunks coming back?) and recall (are all the right chunks coming back?). Most RAG failures are retrieval failures wearing a generation costume.
+ 
+**The reranker is the highest-ROI Advanced RAG upgrade.** Adding a cross-encoder reranker to your pipeline — taking the top 20 semantic search results and reranking them to find the true top 3 — often improves end-to-end quality more than switching to a more powerful generation model. Cross-encoders are slow for first-pass retrieval but fast for reranking a small set. Use them.
+ 
+**Context window size is not a substitute for retrieval quality.** More tokens doesn't mean better RAG. Stuffing 100 chunks into a 128K context window gives the model more to work with, but also more irrelevant noise to reason past. Fewer, highly relevant chunks consistently outperform larger, noisier context. Precision beats recall for generation quality.
+ 
+**Every hop in Agentic RAG is a latency budget item.** Each retrieval-generation loop adds 1–3 seconds. For user-facing applications, set a maximum hop count and have the model summarize what it has at that point rather than continuing indefinitely. Unbounded agentic loops are an excellent way to create terrible user experiences.
+ 
+**CRAG's value is in making failures explicit.** The most dangerous RAG failure is silent — the model generates a confident, plausible-sounding wrong answer. CRAG's relevance grading converts this into a detectable, handleable event. Even if you don't implement the full CRAG architecture, adding a retrieval quality check before generation is worth the extra LLM call.
+ 
+---
+ 
+### Common Mistakes
+ 
+**Treating chunk size as the main tuning knob.** Chunk size matters, but it's not the lever that unlocks the biggest improvements. Retrieval strategy, reranking, and query preprocessing usually have a larger impact and are more principled to tune.
+ 
+**Skipping evaluation infrastructure.** You can't know which RAG variant is better without measuring. Build a small evaluation set of question/answer pairs and measure retrieval precision, answer faithfulness, and answer relevance before and after any change. Flying blind on RAG quality is how you end up making things worse while believing you made them better.
+ 
+**Deploying Agentic RAG without cost controls.** An agentic loop that makes 10 LLM calls per query at GPT-4 prices gets expensive fast at scale. Set maximum iterations, log call counts per query, and alert when queries exceed the expected range.
+ 
+**Building Graph RAG when Advanced RAG would suffice.** Graph RAG is genuinely powerful but carries a substantial engineering investment. Before committing to it, verify that your questions actually require relationship traversal and not just better retrieval of existing text chunks.
+ 
+---
+ 
+### TL;DR
+ 
+- **Naive RAG** → baseline, fast, good for clean knowledge bases, breaks on edge cases
+- **Advanced RAG** → query rewriting + hybrid search + reranking; best first upgrade
+- **Modular RAG** → independent swappable components; for evolving systems
+- **Corrective RAG** → validates retrieval quality, falls back gracefully; for high-stakes apps
+- **Fusion RAG** → multi-source parallel retrieval with rank fusion; for research tools
+- **Agentic RAG** → iterative retrieval until sufficient context; for complex multi-hop questions
+- **Graph RAG** → entity relationship traversal; for structured relational knowledge
+- **Self RAG** → decides whether to retrieve, validates support; for mixed question types
+- Start with Naive RAG, measure failures by category, upgrade to the variant that addresses your specific failure mode
+- The reranker is the highest-ROI single addition to any RAG pipeline
+---
+ 
+### Conclusion
+ 
+The gap between a RAG demo and a RAG product is mostly a retrieval quality problem — and retrieval quality is a design problem with specific solutions for specific failure modes.
+ 
+Naive RAG works in controlled conditions. Production exposes you to ambiguous queries, vocabulary mismatches, multi-hop questions, high-stakes accuracy requirements, and knowledge bases that refuse to stay neatly structured. Each of these demands a different architectural response.
+ 
+The developers building RAG systems that actually work in production aren't the ones with the most powerful models. They're the ones who diagnosed their specific failure mode, picked the variant designed to address it, and measured whether it worked.
+ 
+That diagnostic loop — measure failure, pick the right architecture, measure again — is the engineering discipline that separates a demo that impresses from a product that people trust.
+ 
+---
+ 
+### What's Your Hardest RAG Problem?
+ 
+Which failure mode is giving your RAG pipeline the most trouble — retrieval precision, vocabulary mismatch, multi-hop reasoning, or hallucination from bad context? And what's worked for you?
+ 
+The production edge cases are where the real learning happens. Share what you've run into.

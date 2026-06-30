@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import ExperienceCard from "@/components/ExperienceCard";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import content from "../../public/Data.json";
+import Container from "@/components/ui/Container";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -53,14 +54,14 @@ const education: EducationItem[] = content.experience.education.map((edu) => ({
 
 export default function Experience() {
   return (
-    <div className="w-full min-h-screen bg-[#09090C] py-16 px-4 md:px-8 relative overflow-hidden">
+    <div className="w-full min-h-screen bg-[#09090C] py-16 relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0 z-0">
         <div className="absolute inset-0 bg-black/70 backdrop-blur-2xl" />
         <div className="absolute top-1/3 left-1/4 w-1/2 h-1/3 bg-gradient-to-r from-red-400/20 via-orange-400/10 to-amber-400/10 blur-3xl rounded-full opacity-40" />
         <div className="absolute bottom-0 right-0 w-1/3 h-1/4 bg-gradient-to-tl from-amber-400/15 to-transparent blur-2xl rounded-full opacity-20" />
       </div>
 
-      <div className="max-w-5xl mx-auto relative z-10">
+      <Container className="relative z-10">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -156,7 +157,7 @@ export default function Experience() {
             </div>
           </TabsContent>
         </Tabs>
-      </div>
+      </Container>
     </div>
   );
 }

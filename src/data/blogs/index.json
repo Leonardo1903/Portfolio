@@ -1,0 +1,200 @@
+[
+  {
+    "title": "PWA vs React Native: How to Make the Right Choice",
+    "slug": "pwa-vs-react-native-how-to-make-the-right-choice",
+    "cuid": "cmnahq7r700xy29p8dymzhhp3",
+    "published": "2026-03-28T15:34:02.183Z",
+    "cover": "https://cdn.hashnode.com/uploads/covers/64b04655d3c0e2486bd6ef7d/bee8a626-293c-424b-a782-1697a37eb567.png",
+    "tags": [
+      "web-development",
+      "react-native",
+      "developer",
+      "mobile-development",
+      "pwa",
+      "chaicode"
+    ],
+    "featured": true,
+    "category": "App Development",
+    "draft": false,
+    "readingTime": "16 min read",
+    "description": "Your startup just closed its seed round. The investors are happy, the product roadmap is locked, and everyone agrees: you need a mobile app — fast. Your CTO wants to go with Rea..."
+  },
+  {
+    "title": "Unlocking the Power of MongoDB Aggregation Pipelines",
+    "slug": "unlocking-the-power-of-mongodb-aggregation-pipelines",
+    "cuid": "cmc4he5z8002t02la1vlh92bs",
+    "published": "2025-06-20T07:21:17.252Z",
+    "cover": "https://cdn.hashnode.com/res/hashnode/image/upload/v1750403606916/471c5efb-563e-4e99-9bc0-e6cc56f26f83.png",
+    "tags": [
+      "mongodb",
+      "backend",
+      "databases",
+      "webdev",
+      "chaicode"
+    ],
+    "featured": false,
+    "category": "Web Development",
+    "draft": false,
+    "readingTime": "19 min read",
+    "description": "Picture this: you're building an analytics dashboard. You need the top 10 products by revenue for last month, grouped by category, with each product's percentage contribution to..."
+  },
+  {
+    "title": "A Guide to Query Translation in RAG Systems: Key Methods and Examples",
+    "slug": "a-guide-to-query-translation-in-rag-systems-key-methods-and-examples",
+    "cuid": "cmblw7viu000b02la41nhcf86",
+    "published": "2025-06-07T07:08:40.662Z",
+    "cover": "https://cdn.hashnode.com/res/hashnode/image/upload/v1749279979275/6601083d-8b19-4a33-8e74-a799a144b73d.png",
+    "tags": [
+      "generative-ai",
+      "rag",
+      "genai-applications",
+      "chaicode",
+      "agentic-ai",
+      "genai-cohort"
+    ],
+    "featured": false,
+    "category": "Gen AI",
+    "draft": false,
+    "readingTime": "19 min read",
+    "description": "Here's a scenario that should feel familiar. Your RAG system retrieves beautifully on test queries. You've tuned chunk sizes, experimented with embedding models, added a reranke..."
+  },
+  {
+    "title": "How Retrieval-Augmented Generation Boosts AI Results: An In-Depth Look",
+    "slug": "how-retrieval-augmented-generation-boosts-ai-results-an-in-depth-look",
+    "cuid": "cmbkjvhn6000q09l8a83n29cg",
+    "published": "2025-06-06T08:35:21.234Z",
+    "cover": "https://cdn.hashnode.com/res/hashnode/image/upload/v1749198850100/1a16a322-4a07-4cd7-b9cc-af4997ee0923.png",
+    "tags": [
+      "generative-ai",
+      "rag",
+      "genai-applications",
+      "chaicode",
+      "agentic-ai",
+      "genai-cohort"
+    ],
+    "featured": false,
+    "category": "Gen AI",
+    "draft": false,
+    "readingTime": "19 min read",
+    "description": "You built a RAG chatbot. You chunked your documents, embedded them, shoved them into a vector store, and wired it to an LLM. It works — mostly. But it hallucinates on questions..."
+  },
+  {
+    "title": "Understanding the Inner Workings of React Native",
+    "slug": "understanding-the-inner-workings-of-react-native",
+    "cuid": "cmbdg7lzz00040al4af2n8l3c",
+    "published": "2025-06-01T09:18:25.055Z",
+    "cover": "https://cdn.hashnode.com/uploads/covers/64b04655d3c0e2486bd6ef7d/644a1145-50be-4956-a4d1-a79f765d986d.png",
+    "tags": [
+      "app-development",
+      "mobile-apps",
+      "react-native",
+      "best-practices",
+      "beginners",
+      "mobile-development"
+    ],
+    "featured": false,
+    "category": "App Development",
+    "draft": false,
+    "readingTime": "16 min read",
+    "description": "For three years, the React Native community waited for \"the new architecture.\" JSI, Fabric, TurboModules — names that appeared in GitHub issues and conference talks while most p..."
+  },
+  {
+    "title": "Understanding Prompts: A Guide to Different Types of Prompting",
+    "slug": "understanding-prompts-a-guide-to-different-types-of-prompting",
+    "cuid": "cmbbx35tp000f09jo45qb9qyl",
+    "published": "2025-05-31T07:35:18.589Z",
+    "cover": "https://cdn.hashnode.com/uploads/covers/64b04655d3c0e2486bd6ef7d/3ec6eda3-8c34-4b2c-a36c-c025a5ad792c.png",
+    "tags": [
+      "ai-tools",
+      "generative-ai",
+      "chatgpt",
+      "promptengineering",
+      "chaicode",
+      "agentic-ai"
+    ],
+    "featured": false,
+    "category": "Gen AI",
+    "draft": false,
+    "readingTime": "16 min read",
+    "description": "You've seen the Reddit posts. \"ChatGPT is useless for coding.\" \"The output is always generic.\" \"It never does exactly what I want.\" Then you see someone else get stunning result..."
+  },
+  {
+    "title": "Decoding AI: Understanding Tech Jargon & How ChatGPT Works",
+    "slug": "decoding-ai-understanding-tech-jargon-and-how-chatgpt-works",
+    "cuid": "cmbaliknw000f08l8c2ha0oyy",
+    "published": "2025-05-30T09:23:36.092Z",
+    "cover": "https://cdn.hashnode.com/uploads/covers/64b04655d3c0e2486bd6ef7d/a53d290d-a244-4dcc-8b97-6cbe217bd9cd.png",
+    "tags": [
+      "ai",
+      "python",
+      "beginners",
+      "generative-ai",
+      "chaicode",
+      "agentic-ai"
+    ],
+    "featured": false,
+    "category": "Gen AI",
+    "draft": false,
+    "readingTime": "15 min read",
+    "description": "Most developers treat ChatGPT like electricity — they flip the switch, it works, and they don't think much about what's happening inside the wall. That's fine for casual use. It..."
+  },
+  {
+    "title": "The Complete Guide to Web Rendering Explained",
+    "slug": "the-complete-guide-to-web-rendering-explained",
+    "cuid": "cmaf3ifja001q08jo4v2a3emt",
+    "published": "2024-11-11T10:32:38.268Z",
+    "cover": "https://cdn.hashnode.com/res/hashnode/image/upload/v1748595109834/441471a7-6a2c-4e6a-891c-7814f9adaafb.png",
+    "tags": [
+      "web-development",
+      "reactjs",
+      "software-engineering",
+      "rendering",
+      "nextjs",
+      "chaicode"
+    ],
+    "featured": false,
+    "category": "Web Development",
+    "draft": false,
+    "readingTime": "15 min read",
+    "description": "If you've ever shipped a Next.js app and wondered why Lighthouse is still flagging your LCP, or why your blog posts feel slower than a static HTML file from 2004 — the answer is..."
+  },
+  {
+    "title": "Overview of Blockchain Consensus Protocols",
+    "slug": "overview-of-blockchain-consensus-protocols",
+    "cuid": "cmaf3ilpu001h09jv2537bipk",
+    "published": "2024-10-16T04:32:29.978Z",
+    "cover": "https://cdn.hashnode.com/res/hashnode/image/upload/v1771076740658/5c57d677-2496-40a0-9169-28387a7575ee.png",
+    "tags": [
+      "beginners",
+      "blockchain",
+      "web3",
+      "consensus-mechanism",
+      "chaicode"
+    ],
+    "featured": false,
+    "category": "Web3",
+    "draft": false,
+    "readingTime": "14 min read",
+    "description": "Every blockchain makes a silent promise: no one owns it, yet everyone can trust it. Think about how strange that is. There's no CEO deciding which transactions are valid. No ban..."
+  },
+  {
+    "title": "REST vs GraphQL: A Comprehensive Comparison",
+    "slug": "rest-vs-graphql-a-comprehensive-comparison",
+    "cuid": "cmaf3i9sr000f09l8hkmqd1h6",
+    "published": "2024-10-10T08:29:06.064Z",
+    "cover": "https://cdn.hashnode.com/res/hashnode/image/upload/v1771076785021/7f728cf6-86cb-4ae3-b808-b064f6630788.png",
+    "tags": [
+      "software-development",
+      "web-development",
+      "graphql",
+      "rest-api",
+      "backend-development",
+      "chaicode"
+    ],
+    "featured": false,
+    "category": "Web Development",
+    "draft": false,
+    "readingTime": "14 min read",
+    "description": "Here's a take that will age well: most teams arguing about REST vs GraphQL are arguing about the wrong thing. They're debating the tool when they should be asking: what does my..."
+  }
+]

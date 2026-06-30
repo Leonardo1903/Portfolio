@@ -1,0 +1,370 @@
+---
+title: "Understanding the Inner Workings of React Native"
+datePublished: 2025-06-01T09:18:25.055Z
+cuid: cmbdg7lzz00040al4af2n8l3c
+slug: understanding-the-inner-workings-of-react-native
+cover: https://cdn.hashnode.com/uploads/covers/64b04655d3c0e2486bd6ef7d/644a1145-50be-4956-a4d1-a79f765d986d.png
+tags: app-development, mobile-apps, react-native, best-practices, beginners, mobile-development
+
+---
+
+For three years, the React Native community waited for "the new architecture." JSI, Fabric, TurboModules — names that appeared in GitHub issues and conference talks while most production apps were still running the old bridge.
+ 
+Then it shipped as the default in React Native 0.76, and a lot of developers discovered they didn't actually understand what changed or why it mattered.
+ 
+This post is the explanation that should have existed from day one. Not "here are the new names," but: here's what was broken about the old model, here's the specific engineering decision that fixes each problem, and here's what this means for the code you write today.
+ 
+By the end, you'll understand why your animations stutter (and why they don't have to), why native module calls used to feel sluggish, and why the new architecture enables things that were architecturally impossible before.
+ 
+---
+ 
+### What Was Actually Broken
+ 
+To understand the new architecture, you have to understand what the old one got wrong.
+ 
+The original React Native model had one core mechanism: a **bridge**. JavaScript ran in its own thread. Native code (Android/iOS) ran in its own thread. When one side needed to talk to the other, it serialized the message to JSON, passed it across the bridge, and the other side deserialized it.
+ 
+This was a clean design decision in 2015. It kept the two worlds separate and made the system comprehensible. But it had a fundamental performance cost that no amount of optimization could fully eliminate:
+ 
+**Every JS ↔ Native interaction was asynchronous and serialization-heavy.**
+ 
+Scroll a list. The touch event fires in native, gets serialized to JSON, crosses the bridge, hits JavaScript, JavaScript computes the new scroll position, serializes that back to JSON, crosses the bridge again, native updates the UI. On every frame. At 60 frames per second, that's 60 round trips per second through a serialization layer — with no guaranteed timing on when any given message would be processed.
+ 
+This is why React Native animations have historically felt slightly off. Not always — but under load, when the JS thread was busy, the bridge would back up. Frames would drop. The UI would stutter. And there was no fix for it within the old model, because the serialization cost was architectural, not implementational.
+ 
+The new architecture doesn't optimize the bridge. It eliminates it.
+ 
+---
+ 
+### The New Architecture: Four Pieces, One Coherent Design
+ 
+#### JSI: The Bridge Killer
+ 
+**JavaScript Interface (JSI)** replaces the bridge as the communication layer between JavaScript and native code.
+ 
+The old bridge serialized everything to JSON and passed messages asynchronously. JSI does something fundamentally different: it allows JavaScript to hold a **direct reference to a C++ object** and call methods on it synchronously.
+ 
+```cpp
+// What JSI looks like at the C++ level
+// Your native module exposes a HostObject
+class NativeAnimationModule : public jsi::HostObject {
+public:
+  jsi::Value get(jsi::Runtime& rt, const jsi::PropNameID& name) override {
+    if (name.utf8(rt) == "startAnimation") {
+      return jsi::Function::createFromHostFunction(rt, name, 2,
+        [this](jsi::Runtime& rt, const jsi::Value& thisVal,
+               const jsi::Value* args, size_t count) -> jsi::Value {
+          // Runs synchronously, no serialization
+          startAnimation(args[0].getNumber(), args[1].getObject(rt));
+          return jsi::Value::undefined();
+        });
+    }
+  }
+};
+```
+ 
+```javascript
+// From JavaScript, this call is synchronous
+// No JSON serialization, no bridge queue, no async overhead
+nativeAnimationModule.startAnimation(300, { easing: 'spring' });
+```
+ 
+The implication is profound: **JavaScript can now call native code with the same performance characteristics as calling another JavaScript function.** No serialization. No async queue. No guaranteed latency.
+ 
+This unlocks two things that were previously impossible:
+1. Synchronous native module calls from JavaScript
+2. Native code holding references to JavaScript objects and calling back into them without message passing
+Everything else in the new architecture is built on top of JSI.
+ 
+---
+ 
+#### Hermes: The Engine Built for Mobile
+ 
+Before Hermes, React Native used JavaScriptCore (JSC) — the same engine that powers Safari. JSC is a general-purpose JS engine built for desktop browser performance. It optimizes for throughput on long-running scripts. Mobile has different requirements: fast startup, low memory footprint, and good performance on mid-range hardware that doesn't have desktop-class CPUs.
+ 
+**Hermes** is the JS engine Facebook built specifically for React Native. The key optimization: **Ahead-of-Time (AOT) bytecode compilation**.
+ 
+Standard JS engines parse and compile JavaScript at runtime — every time your app starts, JSC is parsing your bundle from source. Hermes shifts this work to build time:
+ 
+```bash
+# During your production build, Metro + Hermes compiles JS → bytecode
+# The app ships bytecode, not source
+# At runtime: load bytecode (fast) vs parse source (slow)
+ 
+# Startup time comparison on a mid-range Android device:
+# JavaScriptCore: ~800ms to parse + execute bundle
+# Hermes (bytecode): ~350ms
+```
+ 
+The practical effect is most visible on Android, where mid-range devices dominate the market. Hermes can cut startup times in half. For a consumer app where users are one slow load away from uninstalling, this matters.
+ 
+Hermes also has a smaller memory footprint than JSC — it doesn't include a JIT compiler, trading peak throughput for lower baseline memory usage. On mobile, where your app is competing for RAM with the OS and other apps, this is usually the right trade-off.
+ 
+**Hermes is the default since React Native 0.70.** If you're still on an older version, or explicitly opted out, enabling it is the single highest-ROI performance change you can make with minimal code changes.
+ 
+---
+ 
+#### Fabric: The Renderer That Understands Concurrent React
+ 
+The old renderer in React Native was synchronous and single-threaded. React would compute a new tree of UI components, hand it to the native renderer, and the native renderer would apply the changes. This happened in a linear, blocking fashion — compute, then render, no interleaving.
+ 
+React 18 introduced Concurrent Mode: the ability to pause, interrupt, and prioritize rendering work. Start rendering a heavy update, get interrupted by a user interaction, pause the heavy work, handle the interaction, resume. This is the foundation of features like `startTransition`, `Suspense`, and streaming rendering.
+ 
+The old React Native renderer couldn't support this. It was built on assumptions (synchronous, non-interruptible) that concurrent rendering violates.
+ 
+**Fabric** is the new renderer that aligns React Native with React 18's concurrent model.
+ 
+```javascript
+// This now works in React Native with Fabric
+// The heavy list rendering doesn't block the search input
+import { startTransition, useState } from 'react';
+ 
+function ProductSearch() {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState(allProducts);
+ 
+  function handleSearch(text) {
+    setQuery(text); // Urgent: update input immediately
+    startTransition(() => {
+      // Non-urgent: can be interrupted if user keeps typing
+      setResults(filterProducts(text));
+    });
+  }
+ 
+  return (
+    <>
+      <TextInput value={query} onChangeText={handleSearch} />
+      <FlashList data={results} renderItem={renderProduct} />
+    </>
+  );
+}
+```
+ 
+Under the old architecture, a large `setResults` update would block the UI thread until it finished. With Fabric and `startTransition`, React can pause that update if the user types another character, prioritize keeping the input responsive, then resume the list update when the thread is free.
+ 
+**The other thing Fabric changes: the shadow tree.**
+ 
+Layout in React Native has always been computed in C++ using Yoga (a cross-platform Flexbox engine). In the old architecture, this happened through the bridge — layout measurements crossed between JS and native asynchronously. In Fabric, the shadow tree (the C++ representation of your UI) is directly accessible from both JavaScript (via JSI) and native, without serialization. Layout is computed synchronously and off the JS thread.
+ 
+This is why complex animated layouts can now be genuinely smooth: the layout calculation never blocks your application logic.
+ 
+---
+ 
+#### TurboModules: Native Modules Without the Tax
+ 
+In the old architecture, every native module — camera, GPS, Bluetooth, file system, whatever — was loaded at startup. Even if your app never opened the camera, the camera module was initialized at launch. With 20+ native modules in a typical app, this startup overhead adds up.
+ 
+**TurboModules** introduces lazy loading: a native module is initialized the first time JavaScript actually calls it, not at app startup.
+ 
+```javascript
+// Old architecture: CameraModule loaded at startup regardless
+import { Camera } from 'react-native-camera';
+ 
+// New architecture with TurboModules:
+// The native camera module is initialized only when this import
+// is first actually used — not when the app launches
+import Camera from 'react-native-camera'; // lazy
+```
+ 
+The other change: TurboModules communicate via JSI instead of the bridge. Module calls are synchronous, no serialization overhead, with proper TypeScript types generated from the native interface specification:
+ 
+```typescript
+// The TurboModule spec — this TypeScript file is the source of truth
+// Native code and JS bindings are generated from this
+import type { TurboModule } from 'react-native';
+import { TurboModuleRegistry } from 'react-native';
+ 
+export interface Spec extends TurboModule {
+  getDeviceModel(): string;
+  getBatteryLevel(): Promise<number>;
+  readonly onBatteryChange: EventEmitter<{ level: number }>;
+}
+ 
+export default TurboModuleRegistry.getEnforcing<Spec>('DeviceInfo');
+```
+ 
+The TypeScript spec generates type-safe bindings in both directions. No more runtime errors when a native method signature changes — the mismatch is caught at build time.
+ 
+---
+ 
+### The Threading Model: What Runs Where
+ 
+Understanding which work happens on which thread is the key to writing performant React Native code.
+ 
+```
+┌─────────────────────────────────────────────────────┐
+│                   JS Thread                          │
+│  Your app logic: React, state, navigation, business  │
+│  logic, API calls. Runs your JavaScript bundle.      │
+└─────────────────────┬───────────────────────────────┘
+                      │ JSI (synchronous calls)
+┌─────────────────────▼───────────────────────────────┐
+│              UI / Main Thread                        │
+│  Renders views, handles touch events, runs           │
+│  animations that have been offloaded from JS.        │
+└─────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────┐
+│            Background / Native Threads               │
+│  Network requests, file I/O, sensor data,            │
+│  heavy computation via native modules.               │
+└─────────────────────────────────────────────────────┘
+```
+ 
+**The rule for smooth UIs:** keep the UI thread free. The moment you block the UI thread — with expensive JS computation, synchronous layout operations, or heavy native module calls — frames drop and the app feels janky.
+ 
+The new architecture helps here in a specific way: because JSI calls can be synchronous, libraries like **Reanimated 3** and **react-native-gesture-handler** can run their logic entirely on the UI thread via **worklets** — small isolated JavaScript functions that execute on the native side without ever touching the JS thread.
+ 
+```javascript
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+ 
+function DraggableCard() {
+  const translateX = useSharedValue(0);
+  const translateY = useSharedValue(0);
+ 
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateX: translateX.value },
+      { translateY: translateY.value }
+    ]
+  }));
+  // ↑ This function runs as a worklet on the UI thread
+  // Even if your JS thread is busy computing something else,
+  // this animation continues at 60fps
+ 
+  const gesture = Gesture.Pan()
+    .onUpdate((e) => {
+      translateX.value = e.translationX;
+      translateY.value = e.translationY;
+    });
+    // ↑ Gesture handler also runs on the UI thread
+    // No JS thread involvement during the gesture at all
+ 
+  return (
+    <GestureDetector gesture={gesture}>
+      <Animated.View style={animatedStyle}>
+        <Card />
+      </Animated.View>
+    </GestureDetector>
+  );
+}
+```
+ 
+This component can handle 60fps drag gestures even while your JS thread is parsing a large API response. That was not reliably achievable in the old architecture.
+ 
+---
+ 
+### Real-World Example: Tracing a Full Render
+ 
+Let's walk through what happens when this component first renders in the new architecture:
+ 
+```javascript
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Hello, world!</Text>
+    </View>
+  );
+}
+```
+ 
+**1. Metro bundles → Hermes compiles to bytecode at build time**
+ 
+Your JSX is compiled by Metro into JavaScript, then Hermes compiles that to bytecode that ships with the app. At runtime, Hermes loads the bytecode directly — no parse step.
+ 
+**2. JSX → React element tree**
+ 
+At runtime, JSX compiles to `React.createElement` calls, producing a lightweight object tree:
+```javascript
+React.createElement(View, { style: styles.container },
+  React.createElement(Text, { style: styles.text }, "Hello, world!")
+)
+```
+ 
+**3. React reconciler → Fabric renderer**
+ 
+React's reconciler diffs this tree against the previous one (empty, on first render) and hands the changes to Fabric.
+ 
+**4. Fabric → C++ shadow tree → Yoga layout**
+ 
+Fabric builds a C++ shadow tree representing your UI. Yoga runs the Flexbox layout algorithm synchronously, in C++, off the JS thread, computing positions and sizes for every element.
+ 
+**5. Fabric → platform views**
+ 
+Layout complete, Fabric instructs the platform to mount native views:
+- `View` → `android.view.ViewGroup` (Android) or `UIView` (iOS)
+- `Text` → `android.widget.TextView` or `UILabel`
+**6. Result appears on screen**
+ 
+The whole process from step 2 to step 6 happens, for a simple component, in under 16ms — within the budget for a single 60fps frame.
+ 
+---
+ 
+### Decision Guide: When These Changes Matter in Your Code
+ 
+**Use Reanimated 3 for any animation you care about.** If you're still using the Animated API for anything complex, you're running animation logic on the JS thread and accepting the risk of jank under load. Reanimated 3 worklets run on the UI thread unconditionally.
+ 
+**Enable Hermes if you haven't.** Especially on Android. If your app's startup time is a complaint, this is the first lever to pull.
+ 
+**Prefer JSI-based libraries for storage and heavy IO.** `react-native-mmkv` (JSI-based) is synchronous and 10x faster than `AsyncStorage` (bridge-based). For any storage that's in the critical path of your UI, the difference is noticeable.
+ 
+**Use `startTransition` for expensive state updates.** If a state update triggers a heavy re-render (filtering a large list, recomputing a complex layout), wrap it in `startTransition` to tell React it can be interrupted. This requires Fabric.
+ 
+**Write TurboModule specs for any native modules you own.** The TypeScript spec gives you type safety, lazy initialization, and JSI performance in one step.
+ 
+---
+ 
+### Key Insights
+ 
+**The bridge wasn't just slow — it made whole categories of features impossible.** Synchronous native calls, interruptible rendering, worklet-based animation — none of these were possible with the bridge model. The new architecture doesn't make React Native faster at the old things; it makes previously impossible things possible.
+ 
+**Hermes's lack of JIT is a deliberate trade-off, not a limitation.** JIT compilation improves peak throughput but adds startup time, memory overhead, and complexity. For mobile apps where startup time and memory pressure matter more than peak throughput, no-JIT is often the right call. Hermes is not "worse than V8" — it's optimized for different constraints.
+ 
+**Most animation jank isn't a React Native problem — it's a threading model problem.** If your animations run JS-side logic on every frame, they will drop frames when the JS thread is busy. The fix isn't to optimize the animation — it's to move it off the JS thread entirely with Reanimated worklets. The new architecture makes this the path of least resistance.
+ 
+**JSI synchronous calls are powerful and easy to misuse.** Synchronous calls from JS to native block the JS thread until the native operation completes. For fast operations (reading from MMKV, calling a calculation), this is fine. For slow operations (file I/O, network), you still want async. The fact that you *can* call synchronously doesn't mean you always *should*.
+ 
+**The App Router / RSC mental model is coming to React Native.** React Server Components, server-side rendering concepts, and the React 18 concurrent model are gradually making their way into React Native through Expo Router and related tooling. Understanding Fabric and the concurrent rendering model now means you'll be ready for that shift without a steep relearning curve.
+ 
+---
+ 
+### Common Mistakes
+ 
+**Mixing old and new architecture libraries.** Not all community libraries have been migrated to the new architecture. A library that hasn't added a TurboModule spec and still uses the old bridge will create a hybrid situation — you'll get new architecture benefits for your own code but not for that dependency. Check `reactnative.directory` for new architecture compatibility before adding dependencies.
+ 
+**Running expensive JS on every animation frame.** Even with the new architecture, if you're using `useAnimatedStyle` with a worklet that calls back into JS, you've recreated the bridge bottleneck. Keep worklets pure — only reference shared values and avoid JS callbacks inside them.
+ 
+**Ignoring the startup cost of large bundles.** Hermes helps with startup time, but it doesn't eliminate the cost of executing a 10MB JavaScript bundle. Lazy loading screens and code splitting via dynamic imports is still essential for large apps.
+ 
+**Not measuring before optimizing.** The Hermes Profiler and Flipper give you actual flame graphs of JS execution. Before attributing jank to "the architecture," measure which function is taking 40ms and fix that. Architectural improvements are multiplied by well-profiled code; they don't substitute for it.
+ 
+---
+ 
+### TL;DR
+ 
+- **Old architecture** → bridge-based, JSON serialization on every JS ↔ Native call, all modules loaded at startup, renderer didn't support concurrent React
+- **JSI** → direct JS ↔ C++ references, synchronous calls, no serialization; the foundation everything else builds on
+- **Hermes** → AOT bytecode compilation, faster startup (especially Android), lower memory, no JIT
+- **Fabric** → new renderer supporting concurrent React, synchronous C++ layout via Yoga, enables interruptible rendering
+- **TurboModules** → lazy native module loading, JSI-based calls, TypeScript specs for type safety
+- **Worklets** (Reanimated 3) → animation + gesture logic runs on UI thread, immune to JS thread load
+- The new architecture makes previously impossible things possible — synchronous native calls, interruptible renders, true 60fps gestures under load
+- Default in React Native 0.76; if you're on an older version, migrating is worth it
+---
+ 
+### Conclusion
+ 
+The old React Native architecture was a pragmatic solution to a hard problem: make web developers productive for native mobile, without requiring them to learn Objective-C or Java. It worked well enough to power apps used by billions of people. It also had a ceiling — a set of performance and capability constraints baked into the bridge model that no amount of optimization could overcome.
+ 
+The new architecture removes that ceiling. Not by making the old things faster, but by replacing the bottleneck with a fundamentally different communication model — one where JavaScript and native code aren't isolated worlds passing messages to each other, but participants in the same C++ runtime with direct, typed, synchronous access to each other's APIs.
+ 
+The practical result: animations that don't drop frames when your app is busy, startup times that don't punish mid-range Android users, native modules that don't pay a serialization tax, and a rendering model that aligns with where React itself is going.
+ 
+If you're building a React Native app in 2025, this is the foundation. The sooner you understand it, the sooner you can stop fighting the architecture and start using it.
+ 
+---
+ 
+### What's Your Migration Story?
+ 
+Have you migrated a production app to the new architecture? What broke, what improved, and what surprised you? Or if you're starting fresh — what part of the new architecture changed how you're thinking about your app's structure?
+ 
+Drop your experience below. The migration stories from production apps are the most useful signal for everyone still on the fence.

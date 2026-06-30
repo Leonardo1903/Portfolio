@@ -148,12 +148,30 @@ export default function Blob() {
 
       <div className="relative z-10 flex items-center justify-center">
         <div className="relative">
-          <Image
+          {/* <Image
             src="/Leonardo.jpg"
             alt="Profile"
             width={400}
             height={400}
             className="relative w-40 h-40 xs:w-56 xs:h-56 md:w-[400px] md:h-[400px] rounded-full object-cover border-2 border-[#FF4C29] shadow-[0_0_32px_0_rgba(255,76,41,0.25)]"
+            priority
+          /> */}
+
+          <Image
+            src="/Leonardo.jpg"
+            alt="Profile"
+            width={400}
+            height={400}
+            className="
+    relative
+    w-40 h-40
+    xs:w-52 xs:h-52
+    md:w-[340px] md:h-[340px]
+    rounded-full
+    object-cover
+    border-2 border-[#FF4C29]
+    shadow-[0_0_40px_0_rgba(255,76,41,0.35)]
+  "
             priority
           />
         </div>
