@@ -34,7 +34,10 @@ type OrderedListProps = ComponentPropsWithoutRef<"ol">;
 
 type ListItemProps = ComponentPropsWithoutRef<"li">;
 
-type ImageProps = ComponentPropsWithoutRef<"img">;
+interface ImageProps {
+  src: string;
+  alt?: string;
+}
 
 type CodeProps = ComponentPropsWithoutRef<"code">;
 
@@ -282,7 +285,7 @@ const mdxComponents = {
 
   /* -------------------------------- Images -------------------------------- */
 
-  img: ({ src = "", alt = "" }: ImageProps) => (
+  img: ({ src, alt = "" }: ImageProps) => (
     <figure className="my-14 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] shadow-xl">
       <Image
         src={src}
