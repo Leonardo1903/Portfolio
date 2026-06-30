@@ -1,5 +1,3 @@
-// src/types/blogs.ts
-
 /* -------------------------------------------------------------------------- */
 /*                               Frontmatter                                  */
 /* -------------------------------------------------------------------------- */
@@ -13,7 +11,7 @@ export interface BlogFrontmatter {
 
   datePublished: string;
 
-  cover?: string;
+  cover: string;
 
   tags: string[];
 
@@ -39,7 +37,7 @@ export interface BlogMetadata {
 
   published: string;
 
-  cover?: string;
+  cover: string;
 
   tags: string[];
 
