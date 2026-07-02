@@ -1,0 +1,233 @@
+---
+title: QuikNote
+
+slug: quiknote
+
+featured: false
+
+status: Production
+
+category: Web Development
+
+tagline: A modern note-taking application focused on simplicity, organization and productivity.
+
+description: QuikNote is a modern note-taking application that enables users to create, organize and manage notes across multiple notebooks with a clean and responsive user experience.
+
+image: /projects/quiknote.png
+
+github: https://github.com/Leonardo1903/QuikNote
+
+live: https://quiknote.leonardo1903.me
+
+technologies:
+  - React.js
+  - Vite
+  - TailwindCSS
+  - Appwrite
+
+published: 2026-07-01
+
+keywords:
+  - Note Taking
+  - React
+  - Appwrite
+  - Productivity
+  - Vite
+---
+
+# Overview
+
+QuikNote is a modern note-taking application built to explore what a productivity application should feel like beyond basic CRUD functionality.
+
+Rather than simply allowing users to create and delete notes, the project focuses on intuitive organization, responsive interactions and clean information architecture. Features such as notebooks, favorites and trash recovery encourage a structured workflow while keeping the writing experience simple and distraction-free.
+
+The project also explores how Backend-as-a-Service platforms such as Appwrite can significantly reduce backend complexity while allowing developers to focus on delivering a polished user experience.
+
+---
+
+# The Problem
+
+Many lightweight note-taking applications become increasingly difficult to use as the number of notes grows.
+
+Without proper organization, users struggle to locate important information, recover accidentally deleted notes or manage multiple collections of content efficiently.
+
+The primary challenges were:
+
+- Create a distraction-free writing experience.
+- Organize notes into scalable notebook structures.
+- Allow quick access to frequently used notes.
+- Prevent accidental data loss.
+- Deliver a responsive experience across different screen sizes.
+
+---
+
+# Goals
+
+The primary objectives for QuikNote were:
+
+- Build a modern note-taking experience.
+- Organize notes using notebooks.
+- Support favorite notes for quick access.
+- Implement soft deletion with trash recovery.
+- Deliver a responsive interface across desktop and mobile devices.
+- Explore Backend-as-a-Service architecture using Appwrite.
+
+---
+
+# Solution
+
+QuikNote combines notebook-based organization with practical productivity features such as favorites and trash recovery to create a more structured note-taking workflow.
+
+React and Vite provide a fast frontend development experience, while Appwrite manages authentication, data storage and backend services. This architecture significantly reduces infrastructure complexity and allows development to focus on usability and application design.
+
+The result is a lightweight yet capable productivity application designed around simplicity and organization.
+
+---
+
+# Key Features
+
+- Authentication
+- Notebook Management
+- Rich Note Editor
+- Favorites
+- Trash Recovery
+- Responsive User Interface
+
+---
+
+# Architecture
+
+The application follows a client-first architecture powered by Appwrite.
+
+```text
+                 ┌──────────────┐
+                 │    Client    │
+                 └──────┬───────┘
+                        │
+                 React + Vite
+                        │
+                  Appwrite Cloud
+                ┌────────┼────────┐
+                │        │        │
+         Authentication Database Storage
+```
+
+### Why this architecture?
+
+The application delegates backend responsibilities to Appwrite while keeping the frontend lightweight.
+
+- React handles the user interface.
+- Vite provides fast builds and development.
+- Appwrite manages authentication.
+- Appwrite stores application data.
+- Backend complexity is minimized.
+
+This allows rapid product development while maintaining a clean architecture.
+
+---
+
+# Technology Stack
+
+| Layer | Technologies |
+|--------|--------------|
+| Frontend | React.js, Vite, TailwindCSS |
+| Backend | Appwrite |
+| Authentication | Appwrite Auth |
+| Database | Appwrite Database |
+| Deployment | Vercel |
+
+---
+
+# Engineering Decisions
+
+## Why React + Vite?
+
+Vite provides an extremely fast development experience with near-instant Hot Module Replacement, making frontend iteration significantly faster than traditional build systems.
+
+Combined with React, it enables rapid UI development while keeping the application lightweight.
+
+---
+
+## Why Appwrite?
+
+Instead of building authentication, databases and backend APIs from scratch, Appwrite provides these capabilities out of the box.
+
+This allowed development effort to focus on designing a polished user experience rather than backend infrastructure.
+
+---
+
+## Soft Delete Instead of Permanent Delete
+
+Deleting notes permanently introduces unnecessary risk.
+
+Instead, deleted notes are moved into a dedicated trash section where they can be restored later, improving user confidence while preventing accidental data loss.
+
+---
+
+## Notebook-Based Organization
+
+As collections of notes grow, organization becomes increasingly important.
+
+Grouping notes into notebooks creates a scalable information hierarchy that keeps navigation intuitive while reducing clutter.
+
+---
+
+# Challenges
+
+Developing QuikNote introduced several product and engineering challenges.
+
+- Designing an intuitive notebook hierarchy.
+- Managing application state across notebooks and notes.
+- Implementing trash recovery without duplicating data.
+- Maintaining responsive layouts across different screen sizes.
+- Balancing simplicity with useful productivity features.
+
+---
+
+# Lessons Learned
+
+Building QuikNote reinforced several important product development principles.
+
+- Great user experience often matters more than adding numerous features.
+- Simple organizational patterns dramatically improve usability.
+- State management becomes increasingly important as application complexity grows.
+- Backend-as-a-Service platforms can significantly accelerate product development.
+- Productivity software succeeds when it removes friction rather than adding functionality.
+
+---
+
+# Future Improvements
+
+## Markdown & Rich Text Editor
+
+Support both Markdown syntax and rich text editing, enabling users to create technical documentation, meeting notes and structured knowledge bases.
+
+---
+
+## Offline-First Experience
+
+Introduce local caching and background synchronization so users can continue working without an internet connection and automatically synchronize changes once connectivity returns.
+
+---
+
+## Real-Time Collaboration
+
+Allow multiple users to edit notes simultaneously with live cursors, conflict resolution and collaborative workspaces.
+
+---
+
+## AI-Powered Knowledge Search
+
+Implement semantic search using vector embeddings so users can locate notes through natural language queries instead of relying solely on keyword searches.
+
+---
+
+## Version History
+
+Track revisions made to notes and allow users to restore previous versions whenever necessary.
+
+---
+
+## Observability & Performance Monitoring
+
+Integrate OpenTelemetry, Prometheus and centralized logging to monitor frontend performance, backend requests and overall application reliability in production.

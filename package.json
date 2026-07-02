@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "sync:blogs": "tsx src/scripts/sync-blogs.ts"
+    "sync:blogs": "tsx src/scripts/sync-blogs.ts",
+    "sync:projects": "tsx src/scripts/sync-projects.ts"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

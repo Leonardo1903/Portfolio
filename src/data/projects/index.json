@@ -1,0 +1,88 @@
+[
+  {
+    "title": "Arkive",
+    "slug": "arkive",
+    "featured": true,
+    "status": "Production",
+    "category": "Web Development",
+    "tagline": "A secure cloud storage platform built for seamless file management, organization and collaboration.",
+    "description": "Arkive is a modern cloud storage platform that enables users to securely upload, organize and share files through an intuitive interface.",
+    "image": "/projects/arkive.png",
+    "github": "https://github.com/Leonardo1903/Arkive",
+    "live": "https://arkive.leonardo1903.me",
+    "technologies": [
+      "Next.js",
+      "TypeScript",
+      "TailwindCSS",
+      "Clerk",
+      "Drizzle ORM",
+      "PostgreSQL",
+      "ImageKit"
+    ],
+    "published": "2026-07-01T00:00:00.000Z",
+    "keywords": [
+      "Cloud Storage",
+      "Next.js",
+      "PostgreSQL",
+      "ImageKit",
+      "Clerk"
+    ],
+    "readingTime": "5 min read"
+  },
+  {
+    "title": "EchoVault",
+    "slug": "echovault",
+    "featured": false,
+    "status": "Production",
+    "category": "Web Development",
+    "tagline": "An anonymous feedback platform designed to encourage honest communication through AI-powered assistance.",
+    "description": "EchoVault is an anonymous feedback platform that enables individuals and teams to communicate openly in a safe environment through AI-assisted anonymous messaging.",
+    "image": "/projects/echovault.png",
+    "github": "https://github.com/Leonardo1903/EchoVault",
+    "live": "https://echovault.leonardo1903.me",
+    "technologies": [
+      "Next.js",
+      "TypeScript",
+      "TailwindCSS",
+      "MongoDB",
+      "Auth.js",
+      "Google Gemini API"
+    ],
+    "published": "2026-07-01T00:00:00.000Z",
+    "keywords": [
+      "AI",
+      "Anonymous Feedback",
+      "Gemini",
+      "Next.js",
+      "MongoDB"
+    ],
+    "readingTime": "5 min read"
+  },
+  {
+    "title": "QuikNote",
+    "slug": "quiknote",
+    "featured": false,
+    "status": "Production",
+    "category": "Web Development",
+    "tagline": "A modern note-taking application focused on simplicity, organization and productivity.",
+    "description": "QuikNote is a modern note-taking application that enables users to create, organize and manage notes across multiple notebooks with a clean and responsive user experience.",
+    "image": "/projects/quiknote.png",
+    "github": "https://github.com/Leonardo1903/QuikNote",
+    "live": "https://quiknote.leonardo1903.me",
+    "technologies": [
+      "React.js",
+      "Vite",
+      "TailwindCSS",
+      "Appwrite"
+    ],
+    "published": "2026-07-01T00:00:00.000Z",
+    "keywords": [
+      "Note Taking",
+      "React",
+      "Appwrite",
+      "Productivity",
+      "Vite"
+    ],
+    "readingTime": "5 min read"
+  }
+]

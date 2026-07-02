@@ -1,0 +1,245 @@
+---
+title: Arkive
+
+slug: arkive
+
+featured: true
+
+status: Production
+
+category: Web Development
+
+tagline: A secure cloud storage platform built for seamless file management, organization and collaboration.
+
+description: Arkive is a modern cloud storage platform that enables users to securely upload, organize and share files through an intuitive interface.
+
+image: /projects/arkive.png
+
+github: https://github.com/Leonardo1903/Arkive
+
+live: https://arkive.leonardo1903.me
+
+technologies:
+  - Next.js
+  - TypeScript
+  - TailwindCSS
+  - Clerk
+  - Drizzle ORM
+  - PostgreSQL
+  - ImageKit
+
+published: 2026-07-01
+
+keywords:
+  - Cloud Storage
+  - Next.js
+  - PostgreSQL
+  - ImageKit
+  - Clerk
+---
+
+# Overview
+
+Arkive is a modern cloud storage platform designed to explore the architecture behind production-ready file management systems.
+
+The project focuses on building a secure, scalable and responsive application where users can upload, organize and manage files while separating application data from media storage. Rather than treating file uploads as a simple CRUD application, Arkive explores the architectural decisions involved in authentication, metadata management, cloud storage integration and optimized media delivery.
+
+---
+
+# The Problem
+
+Managing files across multiple devices should be simple, fast and secure.
+
+Many cloud storage platforms become difficult to navigate as content grows, while others tightly couple application data with media storage, making scaling and maintenance increasingly difficult.
+
+The primary challenges were:
+
+- Building a secure authentication system.
+- Organizing uploaded files efficiently.
+- Separating file metadata from binary storage.
+- Maintaining fast media delivery.
+- Creating an intuitive dashboard that remains responsive as the number of files increases.
+
+---
+
+# Goals
+
+The primary objectives for Arkive were:
+
+- Build production-ready authentication.
+- Support secure file uploads.
+- Create folder-based organization.
+- Enable fast search across uploaded files.
+- Optimize media delivery through a CDN.
+- Deliver a responsive dashboard across desktop and mobile devices.
+
+---
+
+# Solution
+
+Arkive combines Clerk, PostgreSQL, Drizzle ORM and ImageKit to provide a modern cloud storage experience.
+
+Application data such as folders, ownership and metadata are stored inside PostgreSQL, while uploaded media is delegated to ImageKit. This separation allows each service to focus on what it does best while keeping the overall architecture modular and maintainable.
+
+Users authenticate through Clerk, upload files directly to ImageKit and interact with their content through a responsive dashboard powered by Next.js.
+
+---
+
+# Key Features
+
+- Secure Authentication
+- File Uploads
+- Folder Management
+- File Search
+- Image Optimization
+- Responsive Dashboard
+
+---
+
+# Architecture
+
+The application separates media storage from application data.
+
+```text
+                ┌──────────────┐
+                │    Client    │
+                └──────┬───────┘
+                       │
+                 Clerk Authentication
+                       │
+                Next.js Application
+                ┌──────┴───────┐
+                │              │
+          PostgreSQL      ImageKit CDN
+        (File Metadata)   (Binary Storage)
+```
+
+### Why this architecture?
+
+Separating storage responsibilities keeps the system significantly easier to maintain.
+
+- PostgreSQL stores relationships.
+- ImageKit stores media.
+- Clerk manages authentication.
+- Next.js orchestrates application logic.
+
+Each service has a single responsibility, reducing operational complexity while improving scalability.
+
+---
+
+# Technology Stack
+
+| Layer | Technologies |
+|--------|--------------|
+| Frontend | Next.js, React, TailwindCSS |
+| Backend | Next.js Server Actions, Drizzle ORM |
+| Database | PostgreSQL |
+| Authentication | Clerk |
+| Cloud Storage | ImageKit |
+| Deployment | Vercel |
+
+---
+
+# Engineering Decisions
+
+## Why Clerk?
+
+Authentication is one of the most security-sensitive components of any cloud storage platform.
+
+Instead of implementing authentication manually, Clerk provides production-ready user management, session handling and route protection, allowing development effort to focus on product functionality rather than authentication infrastructure.
+
+---
+
+## Why PostgreSQL with Drizzle ORM?
+
+Files naturally form relationships through ownership, folders and permissions.
+
+A relational database models these relationships effectively while Drizzle provides end-to-end type safety, resulting in simpler queries and a better developer experience.
+
+---
+
+## Why ImageKit instead of Local Storage?
+
+Storing uploaded media separately from the application provides several advantages:
+
+- CDN delivery
+- Automatic image optimization
+- Built-in transformations
+- Reduced application server load
+- Simpler deployments
+
+Rather than managing storage infrastructure, Arkive leverages a specialized service optimized for media delivery.
+
+---
+
+## Separate Metadata from File Storage
+
+Only metadata is stored in PostgreSQL.
+
+Actual files remain inside ImageKit.
+
+This separation allows each layer to evolve independently while avoiding unnecessary duplication of data.
+
+---
+
+# Challenges
+
+Several engineering challenges emerged during development:
+
+- Designing folder relationships within a relational database.
+- Synchronizing uploaded files with stored metadata.
+- Managing secure file access.
+- Rendering large collections of files efficiently.
+- Designing intuitive navigation for nested content.
+
+Each challenge required balancing simplicity, scalability and user experience.
+
+---
+
+# Lessons Learned
+
+Building Arkive reinforced several important engineering principles.
+
+- Separating infrastructure concerns simplifies long-term maintenance.
+- Authentication should be designed early rather than added later.
+- Type-safe database access reduces development errors.
+- Good file organization is primarily a UX challenge rather than a technical one.
+- Cloud services allow developers to focus on product value instead of infrastructure management.
+
+---
+
+# Future Improvements
+
+## Shared Workspaces
+
+Allow multiple users to collaborate inside shared workspaces with common ownership and collaborative file management.
+
+---
+
+## Role-Based Access Control
+
+Introduce granular permissions such as Owner, Editor and Viewer to enable secure collaboration across teams.
+
+---
+
+## File Version History
+
+Track file revisions and allow users to restore previous versions whenever required.
+
+---
+
+## Background Upload Pipeline
+
+Move uploads into background workers with resumable transfers, retry mechanisms and upload progress tracking for large files.
+
+---
+
+## AI Semantic Search
+
+Index filenames, metadata and document contents using embeddings to enable natural language search instead of relying only on keyword matching.
+
+---
+
+## Observability & Monitoring
+
+Integrate OpenTelemetry, Prometheus and centralized logging to monitor upload performance, API latency and storage operations in production.

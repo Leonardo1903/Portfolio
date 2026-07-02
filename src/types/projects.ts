@@ -1,64 +1,37 @@
-export interface TechStackSection {
-  category: string;
-  items: string[];
-}
-
-export interface EngineeringDecision {
-  title: string;
-  description: string;
-}
-
-export interface Architecture {
-  title: string;
-  description: string;
-  diagram?: string;
-}
-
 export interface Project {
   slug: string;
 
-  featured: boolean;
-
-  status: "Production" | "In Development";
-
   title: string;
-
-  category: string;
 
   tagline: string;
 
   description: string;
 
+  category: "Web Development" | "App Development" | "Gen AI" | "Web3";
+
+  status: "Production" | "In Development";
+
+  featured: boolean;
+
   image: string;
+
+  cover?: string;
 
   github?: string;
 
   live?: string;
 
+  demo?: string;
+
   technologies: string[];
 
-  overview: string;
+  published: string;
 
-  problem: string;
+  updated?: string;
 
-  goals: string[];
+  readingTime?: string;
 
-  solution: string;
+  keywords?: string[];
 
-  features: string[];
-
-  architecture: Architecture;
-
-  techStack: TechStackSection[];
-
-  engineeringDecisions: EngineeringDecision[];
-
-  challenges: string[];
-
-  lessons: string[];
-
-  futureImprovements: {
-  title: string;
-  description: string;
-}[];
+  excerpt?: string;
 }

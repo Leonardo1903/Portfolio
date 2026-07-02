@@ -539,8 +539,7 @@ export default function Page() {
                     exit={{ opacity: 0, y: 15 }}
                     transition={{ duration: 0.25 }}
                   >
-                    <Link
-                      href={`/blogs/${post.slug}`}
+                    <div
                       className="
                 group
                 grid
@@ -589,10 +588,6 @@ export default function Page() {
                           )}
                         </div>
                       </div>
-
-                      {/* ================================================= */}
-                      {/* Content */}
-                      {/* ================================================= */}
 
                       <div>
                         {/* Meta */}
@@ -662,7 +657,8 @@ export default function Page() {
 
                         {/* CTA */}
 
-                        <div
+                        <Link
+                          href={`/blogs/${post.slug}`}
                           className="
                     mt-8
                     inline-flex
@@ -677,9 +673,9 @@ export default function Page() {
                         >
                           Continue Reading
                           <ArrowRight className="h-4 w-4" />
-                        </div>
+                        </Link>
                       </div>
-                    </Link>
+                    </div>
                   </motion.div>
                 );
               })}

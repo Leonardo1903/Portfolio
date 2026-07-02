@@ -3,20 +3,16 @@ import { ArticleMetadata} from "@/types/blogs";
 export const ARTICLE_METADATA: Record<string, ArticleMetadata> = {
   "pwa-vs-react-native-how-to-make-the-right-choice": {
     subtitle: "Finding the Ideal Mobile Development Approach",
-
     medium:
       "https://medium.com/@LeonardoFernandes1903/pwa-vs-react-native-how-to-make-the-right-choice-7b55eccc3479",
-
     hashnode:
       "https://blog.leonardo1903.me/pwa-vs-react-native-how-to-make-the-right-choice",
   },
 
   "unlocking-the-power-of-mongodb-aggregation-pipelines": {
     subtitle: "Harnessing MongoDB's Most Powerful Feature",
-
     medium:
       "https://medium.com/@LeonardoFernandes1903/unlocking-the-power-of-mongodb-aggregation-pipelines-18ba829f5ef0",
-
     hashnode:
       "https://blog.leonardo1903.me/unlocking-the-power-of-mongodb-aggregation-pipelines",
   },
@@ -60,5 +56,4 @@ export const ARTICLE_METADATA: Record<string, ArticleMetadata> = {
     medium:"https://medium.com/@LeonardoFernandes1903/rest-vs-graphql-a-comprehensive-comparison-78d38a81f6cf",
     hashnode:"https://blog.leonardo1903.me/rest-vs-graphql-a-comprehensive-comparison"
   }
-
 };

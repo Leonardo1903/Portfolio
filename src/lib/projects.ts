@@ -1,29 +1,67 @@
-import { projects } from "@/data/projects";
+import projects from "@/data/projects/index.json";
+
 import type { Project } from "@/types/projects";
 
-/* ========================================================================== */
-/* Getters */
-/* ========================================================================== */
+/* -------------------------------------------------------------------------- */
+/*                                   Data                                     */
+/* -------------------------------------------------------------------------- */
 
-export function getProjects(): Project[] {
-  return projects;
+const projectList = [...(projects as Project[])].sort(
+  (a, b) =>
+    Number(b.featured) - Number(a.featured) ||
+    new Date(b.published).getTime() -
+      new Date(a.published).getTime()
+);
+
+/* -------------------------------------------------------------------------- */
+/*                                  Projects                                  */
+/* -------------------------------------------------------------------------- */
+
+export function getAllProjects(): Project[] {
+  return projectList;
 }
 
-export function getProject(slug: string): Project | undefined {
-  return projects.find((project) => project.slug === slug);
+export function getProjectBySlug(
+  slug: string
+): Project | undefined {
+  return projectList.find(
+    (project) => project.slug === slug
+  );
+}
+
+export function getFeaturedProject():
+  | Project
+  | undefined {
+  return projectList.find(
+    (project) => project.featured
+  );
 }
 
 export function getFeaturedProjects(): Project[] {
-  return projects.filter((project) => project.featured);
-}
-
-export function getFeaturedProject(): Project | undefined {
-  return projects.find((project) => project.featured);
+  return projectList.filter(
+    (project) => project.featured
+  );
 }
 
 export function getArchiveProjects(): Project[] {
-  return projects.filter((project) => !project.featured);
+  return projectList.filter(
+    (project) => !project.featured
+  );
 }
+
+export function getLatestProjects(
+  count = 3
+): Project[] {
+  return projectList.slice(0, count);
+}
+
+export function getTotalProjects(): number {
+  return projectList.length;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                Categories                                  */
+/* -------------------------------------------------------------------------- */
 
 export function getProjectCategories(): string[] {
   return [
@@ -35,98 +73,164 @@ export function getProjectCategories(): string[] {
   ];
 }
 
-export function getProjectsByCategory(category: string): Project[] {
+export function getProjectsByCategory(
+  category: string
+): Project[] {
   if (category === "All") {
-    return getProjects();
+    return getAllProjects();
   }
 
-  return getProjects().filter(
+  return projectList.filter(
     (project) => project.category === category
   );
 }
 
-/* ========================================================================== */
-/* Technologies */
-/* ========================================================================== */
+/* -------------------------------------------------------------------------- */
+/*                               Technologies                                 */
+/* -------------------------------------------------------------------------- */
 
 export function getProjectTechnologies(): string[] {
-  return [...new Set(projects.flatMap((project) => project.technologies))].sort();
+  return [
+    ...new Set(
+      projectList.flatMap(
+        (project) => project.technologies
+      )
+    ),
+  ].sort();
 }
 
 export function getProjectsByTechnology(
   technology: string
 ): Project[] {
-  return projects.filter((project) =>
-    project.technologies.includes(technology)
+  return projectList.filter((project) =>
+    project.technologies.includes(
+      technology
+    )
   );
 }
 
-/* ========================================================================== */
-/* Related Projects */
-/* ========================================================================== */
+/* -------------------------------------------------------------------------- */
+/*                               Related Projects                             */
+/* -------------------------------------------------------------------------- */
 
 export function getRelatedProjects(
   slug: string,
   limit = 3
 ): Project[] {
-  const current = getProject(slug);
+  const current = getProjectBySlug(slug);
 
-  if (!current) return [];
+  if (!current) {
+    return [];
+  }
 
-  return projects
-    .filter(
-      (project) =>
-        project.slug !== slug &&
+  return projectList
+    .map((project) => {
+      if (project.slug === slug) {
+        return null;
+      }
+
+      const sharedTech = project.technologies.filter(
+        (tech) =>
+          current.technologies.includes(tech)
+      ).length;
+
+      const categoryBonus =
         project.category === current.category
+          ? 3
+          : 0;
+
+      return {
+        ...project,
+        score:
+          sharedTech + categoryBonus,
+      };
+    })
+    .filter(
+      (
+        project
+      ): project is Project & {
+        score: number;
+      } =>
+        project !== null &&
+        project.score > 0
     )
-    .slice(0, limit);
+    .sort(
+      (a, b) =>
+        b.score - a.score
+    )
+    .slice(0, limit)
+    .map(
+      ({ score, ...project }) =>
+        project
+    );
 }
 
-/* ========================================================================== */
-/* Navigation */
-/* ========================================================================== */
+/* -------------------------------------------------------------------------- */
+/*                               Navigation                                   */
+/* -------------------------------------------------------------------------- */
 
-export function getAdjacentProjects(slug: string): {
+export function getAdjacentProjects(
+  slug: string
+): {
   previous?: Project;
   next?: Project;
 } {
-  const index = projects.findIndex(
-    (project) => project.slug === slug
-  );
+  const index =
+    projectList.findIndex(
+      (project) =>
+        project.slug === slug
+    );
 
   if (index === -1) {
     return {};
   }
 
   return {
-    previous: index > 0 ? projects[index - 1] : undefined,
+    previous:
+      index < projectList.length - 1
+        ? projectList[index + 1]
+        : undefined,
 
     next:
-      index < projects.length - 1
-        ? projects[index + 1]
+      index > 0
+        ? projectList[index - 1]
         : undefined,
   };
 }
 
-/* ========================================================================== */
-/* Search */
-/* ========================================================================== */
+/* -------------------------------------------------------------------------- */
+/*                                   Search                                   */
+/* -------------------------------------------------------------------------- */
 
-export function searchProjects(query: string): Project[] {
-  const q = query.trim().toLowerCase();
+export function searchProjects(
+  query: string
+): Project[] {
+  const q =
+    query.trim().toLowerCase();
 
-  if (!q) return projects;
+  if (!q) {
+    return projectList;
+  }
 
-  return projects.filter((project) => {
-    return (
-      project.title.toLowerCase().includes(q) ||
-      project.category.toLowerCase().includes(q) ||
-      project.tagline.toLowerCase().includes(q) ||
-      project.description.toLowerCase().includes(q) ||
-      project.overview.toLowerCase().includes(q) ||
-      project.technologies.some((tech) =>
-        tech.toLowerCase().includes(q)
+  return projectList.filter(
+    (project) =>
+      project.title
+        .toLowerCase()
+        .includes(q) ||
+      project.tagline
+        .toLowerCase()
+        .includes(q) ||
+      project.description
+        .toLowerCase()
+        .includes(q) ||
+      project.category
+        .toLowerCase()
+        .includes(q) ||
+      project.technologies.some(
+        (tech) =>
+          tech
+            .toLowerCase()
+            .includes(q)
       )
-    );
-  });
+  );
 }

@@ -4,31 +4,25 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
-import {
-  ArrowLeft,
-  ArrowRight,
-  CheckCircle2,
-  ExternalLink,
-  Github,
-} from "lucide-react";
+import { ArrowLeft, ExternalLink, Github, ArrowRight } from "lucide-react";
 
 import Container from "@/components/ui/Container";
 
 import {
-  getProjects,
-  getProject,
-  getRelatedProjects,
   getAdjacentProjects,
+  getAllProjects,
+  getProjectBySlug,
+  getRelatedProjects,
 } from "@/lib/projects";
 
-import type { Project } from "@/types/projects";
+import { loadProjectContent, renderMDX } from "@/lib/mdx";
 
 /* ========================================================================== */
 /* Static Generation */
 /* ========================================================================== */
 
 export async function generateStaticParams() {
-  return getProjects().map((project) => ({
+  return getAllProjects().map((project) => ({
     slug: project.slug,
   }));
 }
@@ -44,7 +38,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
 
-  const project = getProject(slug);
+  const project = getProjectBySlug(slug);
 
   if (!project) {
     return {
@@ -59,12 +53,7 @@ export async function generateMetadata({
     openGraph: {
       title: project.title,
       description: project.description,
-
-      images: [
-        {
-          url: project.image,
-        },
-      ],
+      images: [{ url: project.image }],
     },
   };
 }
@@ -80,11 +69,15 @@ export default async function ProjectPage({
 }) {
   const { slug } = await params;
 
-  const project = getProject(slug);
+  const project = getProjectBySlug(slug);
 
   if (!project) {
     notFound();
   }
+
+  const source = await loadProjectContent(slug);
+
+  const content = await renderMDX(source);
 
   const relatedProjects = getRelatedProjects(slug);
 
@@ -96,7 +89,7 @@ export default async function ProjectPage({
         <div className="absolute inset-0">
           <div className="absolute left-1/2 top-0 h-[550px] w-[550px] -translate-x-1/2 rounded-full bg-orange-500/10 blur-[140px]" />
 
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.05),transparent_60%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.05),transparent_60%)]" />
         </div>
 
         <section className="relative pt-24">
@@ -521,830 +514,150 @@ export default async function ProjectPage({
                       />
                     </div>
                   </div>
-
-                  {/* Stats */}
-
-                  <div className="mt-8 grid grid-cols-2 gap-4">
-                    <div
-                      className="
-                      rounded-2xl
-
-                      border
-                      border-white/10
-
-                      bg-white/[0.03]
-
-                      p-5
-                    "
-                    >
-                      <p className="text-xs uppercase tracking-[0.25em] text-zinc-500">
-                        Technologies
-                      </p>
-
-                      <p className="mt-3 text-3xl font-bold text-white">
-                        {project.technologies.length}
-                      </p>
-                    </div>
-
-                    <div
-                      className="
-                      rounded-2xl
-
-                      border
-                      border-white/10
-
-                      bg-white/[0.03]
-
-                      p-5
-                    "
-                    >
-                      <p className="text-xs uppercase tracking-[0.25em] text-zinc-500">
-                        Features
-                      </p>
-
-                      <p className="mt-3 text-3xl font-bold text-white">
-                        {project.features.length}
-                      </p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
           </Container>
         </section>
-        {/* ========================================================================== */}
-        {/* Project Story */}
-        {/* ========================================================================== */}
 
         <section className="py-28">
           <Container>
-            <div className="grid gap-20 lg:grid-cols-[1fr_340px]">
-              {/* ========================================================== */}
-              {/* Main Content */}
-              {/* ========================================================== */}
+            <div className="mx-auto max-w-4xl">
+              <article
+                className="
+          prose
+          prose-invert
 
-              <div>
-                <span className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-400">
-                  Case Study
-                </span>
+          max-w-none
 
-                <h2 className="mt-5 text-5xl font-bold tracking-tight text-white">
-                  From Idea to Production
-                </h2>
+          prose-headings:font-bold
+          prose-headings:tracking-tight
 
-                {/* Overview */}
+          prose-h1:text-5xl
+          prose-h2:text-3xl
+          prose-h3:text-2xl
 
-                <div className="mt-12">
-                  <h3 className="text-2xl font-semibold text-white">
-                    Overview
-                  </h3>
+          prose-p:text-zinc-400
+          prose-p:leading-8
 
-                  <p className="mt-6 text-lg leading-9 text-zinc-400">
-                    {project.overview}
-                  </p>
-                </div>
+          prose-li:text-zinc-400
 
-                {/* Problem */}
+          prose-strong:text-white
 
-                <div className="mt-16">
-                  <h3 className="text-2xl font-semibold text-white">
-                    The Problem
-                  </h3>
+          prose-code:text-orange-300
 
-                  <p className="mt-6 text-lg leading-9 text-zinc-400">
-                    {project.problem}
-                  </p>
-                </div>
+          prose-pre:border
+          prose-pre:border-white/10
+          prose-pre:bg-[#0D0D10]
 
-                {/* Goals */}
+          prose-blockquote:border-orange-500
+          prose-blockquote:text-zinc-300
 
-                <div className="mt-16">
-                  <h3 className="text-2xl font-semibold text-white">Goals</h3>
+          prose-a:text-orange-400
+          prose-a:no-underline
+          hover:prose-a:text-orange-300
 
-                  <div className="mt-8 space-y-5">
-                    {project.goals.map((goal) => (
-                      <div key={goal} className="flex items-start gap-4">
-                        <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-orange-400" />
-
-                        <p className="leading-8 text-zinc-300">{goal}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Solution */}
-
-                <div className="mt-16">
-                  <h3 className="text-2xl font-semibold text-white">
-                    The Solution
-                  </h3>
-
-                  <p className="mt-6 text-lg leading-9 text-zinc-400">
-                    {project.solution}
-                  </p>
-                </div>
-              </div>
-
-              {/* ========================================================== */}
-              {/* Sidebar */}
-              {/* ========================================================== */}
-
-              <aside className="h-fit lg:sticky lg:top-28">
-                <div
-                  className="
-            rounded-3xl
-
-            border
-            border-white/10
-
-            bg-white/[0.03]
-
-            p-8
-          "
-                >
-                  <p className="text-xs uppercase tracking-[0.3em] text-orange-400">
-                    Quick Facts
-                  </p>
-
-                  <div className="mt-8 space-y-8">
-                    <div>
-                      <p className="text-xs uppercase tracking-wider text-zinc-500">
-                        Category
-                      </p>
-
-                      <p className="mt-2 font-medium text-white">
-                        {project.category}
-                      </p>
-                    </div>
-
-                    <div>
-                      <p className="text-xs uppercase tracking-wider text-zinc-500">
-                        Status
-                      </p>
-
-                      <p className="mt-2 font-medium text-white">
-                        {project.status}
-                      </p>
-                    </div>
-
-                    <div>
-                      <p className="text-xs uppercase tracking-wider text-zinc-500">
-                        Technologies
-                      </p>
-
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {project.technologies.map((tech) => (
-                          <span
-                            key={tech}
-                            className="
-                      rounded-full
-
-                      border
-                      border-white/10
-
-                      bg-white/[0.03]
-
-                      px-3
-                      py-1
-
-                      text-xs
-
-                      text-zinc-400
-                    "
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    {(project.github || project.live) && (
-                      <div>
-                        <p className="text-xs uppercase tracking-wider text-zinc-500">
-                          Links
-                        </p>
-
-                        <div className="mt-4 flex flex-col gap-3">
-                          {project.github && (
-                            <Link
-                              href={project.github}
-                              target="_blank"
-                              className="inline-flex items-center gap-2 text-zinc-300 transition hover:text-white"
-                            >
-                              <Github className="h-4 w-4" />
-                              GitHub
-                            </Link>
-                          )}
-
-                          {project.live && (
-                            <Link
-                              href={project.live}
-                              target="_blank"
-                              className="inline-flex items-center gap-2 text-zinc-300 transition hover:text-white"
-                            >
-                              <ExternalLink className="h-4 w-4" />
-                              Live Demo
-                            </Link>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </aside>
-            </div>
-          </Container>
-        </section>
-        {/* ========================================================================== */}
-        {/* Features */}
-        {/* ========================================================================== */}
-
-        <section className="py-28">
-          <Container>
-            <div className="mx-auto max-w-3xl text-center">
-              <span className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-400">
-                Key Features
-              </span>
-
-              <h2 className="mt-5 text-5xl font-bold tracking-tight text-white">
-                Built Around Real Use Cases
-              </h2>
-
-              <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-zinc-400">
-                Every feature was implemented to solve a practical problem while
-                maintaining a clean developer experience and intuitive user
-                interface.
-              </p>
-            </div>
-
-            <div className="mt-20 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {project.features.map((feature, index) => (
-                <div
-                  key={feature}
-                  className="
-            rounded-3xl
-
-            border
-            border-white/10
-
-            bg-white/[0.03]
-
-            p-8
-
-            transition-all
-            duration-300
-
-            hover:border-orange-500/30
-            hover:bg-white/[0.05]
-          "
-                >
-                  <div
-                    className="
-              flex
-
-              h-12
-              w-12
-
-              items-center
-              justify-center
-
-              rounded-2xl
-
-              bg-orange-500/10
-
-              font-bold
-
-              text-orange-400
-            "
-                  >
-                    {String(index + 1).padStart(2, "0")}
-                  </div>
-
-                  <h3 className="mt-6 text-xl font-semibold text-white">
-                    {feature}
-                  </h3>
-
-                  <p className="mt-3 leading-7 text-zinc-400">
-                    A core capability designed to improve usability, performance
-                    and overall product experience.
-                  </p>
-                </div>
-              ))}
+          prose-img:rounded-2xl
+        "
+              >
+                {content}
+              </article>
             </div>
           </Container>
         </section>
 
-        {/* ========================================================================== */}
-        {/* Architecture */}
-        {/* ========================================================================== */}
-
-        <section className="py-28">
-          <Container>
-            <div className="grid items-center gap-20 lg:grid-cols-[1fr_420px]">
-              {/* ========================================================== */}
-              {/* Left */}
-              {/* ========================================================== */}
-
-              <div>
-                <span className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-400">
-                  Architecture
-                </span>
-
-                <h2 className="mt-5 text-5xl font-bold tracking-tight text-white">
-                  {project.architecture.title}
-                </h2>
-
-                <p className="mt-8 text-lg leading-9 text-zinc-400">
-                  {project.architecture.description}
-                </p>
-
-                <div
-                  className="
-            mt-10
-
-            rounded-3xl
-
-            border
-            border-orange-500/20
-
-            bg-orange-500/5
-
-            p-6
-          "
-                >
-                  <h3 className="text-lg font-semibold text-orange-300">
-                    Design Philosophy
-                  </h3>
-
-                  <p className="mt-4 leading-8 text-zinc-300">
-                    The architecture emphasizes separation of concerns,
-                    maintainability and scalability. Individual services have
-                    clearly defined responsibilities, making the application
-                    easier to evolve as new features are introduced.
-                  </p>
-                </div>
-              </div>
-
-              {/* ========================================================== */}
-              {/* Right */}
-              {/* ========================================================== */}
-
-              <div>
-                <div
-                  className="
-            overflow-hidden
-
-            rounded-[30px]
-
-            border
-            border-white/10
-
-            bg-zinc-950
-
-            shadow-[0_25px_70px_rgba(0,0,0,0.35)]
-          "
-                >
-                  {/* Browser Header */}
-
-                  <div
-                    className="
-              flex
-              items-center
-              gap-2
-
-              border-b
-              border-white/10
-
-              bg-zinc-900
-
-              px-5
-              py-3
-            "
-                  >
-                    <div className="h-3 w-3 rounded-full bg-red-400/70" />
-                    <div className="h-3 w-3 rounded-full bg-yellow-400/70" />
-                    <div className="h-3 w-3 rounded-full bg-green-400/70" />
-                  </div>
-
-                  <div className="relative aspect-square">
-                    {project.architecture.diagram ? (
-                      <Image
-                        src={project.architecture.diagram}
-                        alt={`${project.title} Architecture`}
-                        fill
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-full items-center justify-center p-10 text-center text-zinc-500">
-                        Architecture diagram coming soon.
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <p className="mt-5 text-center text-sm text-zinc-500">
-                  High-level architecture illustrating the major components of
-                  the system.
-                </p>
-              </div>
-            </div>
-          </Container>
-        </section>
-        {/* ========================================================================== */}
-        {/* Technology Stack */}
-        {/* ========================================================================== */}
-
-        <section className="py-28">
-          <Container>
-            <div className="mx-auto max-w-3xl text-center">
-              <span className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-400">
-                Technology Stack
-              </span>
-
-              <h2 className="mt-5 text-5xl font-bold tracking-tight text-white">
-                Technologies Used
-              </h2>
-
-              <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-zinc-400">
-                Every technology was selected based on the project's
-                requirements, developer experience and long-term maintainability
-                rather than simply using the newest tools available.
-              </p>
-            </div>
-
-            <div className="mt-20 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {project.techStack.map((section) => (
-                <div
-                  key={section.category}
-                  className="
-            rounded-3xl
-
-            border
-            border-white/10
-
-            bg-white/[0.03]
-
-            p-8
-
-            transition-all
-            duration-300
-
-            hover:border-orange-500/30
-            hover:bg-white/[0.05]
-          "
-                >
-                  <h3 className="text-xl font-semibold text-white">
-                    {section.category}
-                  </h3>
-
-                  <div className="mt-6 flex flex-wrap gap-2">
-                    {section.items.map((item) => (
-                      <span
-                        key={item}
-                        className="
-                  rounded-full
-
-                  border
-                  border-white/10
-
-                  bg-white/[0.03]
-
-                  px-3
-                  py-1.5
-
-                  text-sm
-
-                  text-zinc-300
-                "
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Container>
-        </section>
-
-        {/* ========================================================================== */}
-        {/* Engineering Decisions */}
-        {/* ========================================================================== */}
-
-        <section className="py-28">
-          <Container>
-            <div className="mx-auto max-w-3xl text-center">
-              <span className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-400">
-                Engineering Decisions
-              </span>
-
-              <h2 className="mt-5 text-5xl font-bold tracking-tight text-white">
-                Architectural Trade-offs
-              </h2>
-
-              <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-zinc-400">
-                Every project is a series of trade-offs. These decisions explain
-                why certain technologies and architectural patterns were chosen
-                during development.
-              </p>
-            </div>
-
-            <div className="mt-20 space-y-8">
-              {project.engineeringDecisions.map((decision, index) => (
-                <div
-                  key={decision.title}
-                  className="
-            rounded-3xl
-
-            border
-            border-white/10
-
-            bg-white/[0.03]
-
-            p-8
-
-            transition-all
-            duration-300
-
-            hover:border-orange-500/30
-          "
-                >
-                  <div className="flex gap-6">
-                    <div
-                      className="
-                flex
-
-                h-12
-                w-12
-
-                shrink-0
-
-                items-center
-                justify-center
-
-                rounded-2xl
-
-                bg-orange-500/10
-
-                font-bold
-
-                text-orange-400
-              "
-                    >
-                      {String(index + 1).padStart(2, "0")}
-                    </div>
-
-                    <div>
-                      <h3 className="text-2xl font-semibold text-white">
-                        {decision.title}
-                      </h3>
-
-                      <p className="mt-5 leading-8 text-zinc-400">
-                        {decision.description}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Container>
-        </section>
-        {/* ========================================================================== */}
-        {/* Challenges */}
-        {/* ========================================================================== */}
-
-        <section className="py-28">
-          <Container>
-            <div className="mx-auto max-w-3xl text-center">
-              <span className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-400">
-                Challenges
-              </span>
-
-              <h2 className="mt-5 text-5xl font-bold tracking-tight text-white">
-                Engineering Challenges
-              </h2>
-
-              <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-zinc-400">
-                Every meaningful project comes with technical challenges. These
-                are some of the problems encountered while building the
-                application.
-              </p>
-            </div>
-
-            <div className="mt-20 grid gap-6 md:grid-cols-2">
-              {project.challenges.map((challenge, index) => (
-                <div
-                  key={challenge}
-                  className="
-            rounded-3xl
-            border
-            border-white/10
-            bg-white/[0.03]
-            p-8
-          "
-                >
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="
-                flex
-                h-12
-                w-12
-                items-center
-                justify-center
-                rounded-2xl
-                bg-orange-500/10
-                font-bold
-                text-orange-400
-              "
-                    >
-                      {String(index + 1).padStart(2, "0")}
-                    </div>
-
-                    <h3 className="text-xl font-semibold text-white">
-                      Challenge {index + 1}
-                    </h3>
-                  </div>
-
-                  <p className="mt-6 leading-8 text-zinc-400">{challenge}</p>
-                </div>
-              ))}
-            </div>
-          </Container>
-        </section>
-
-        {/* ========================================================================== */}
-        {/* Lessons Learned */}
-        {/* ========================================================================== */}
-
-        <section className="py-28">
-          <Container>
-            <div className="grid gap-16 lg:grid-cols-[340px_1fr]">
-              <div>
-                <span className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-400">
-                  Lessons Learned
-                </span>
-
-                <h2 className="mt-5 text-5xl font-bold tracking-tight text-white">
-                  Key Takeaways
-                </h2>
-
-                <p className="mt-8 text-lg leading-9 text-zinc-400">
-                  Every project influences how I approach the next one. These
-                  are the biggest lessons learned while building this
-                  application.
-                </p>
-              </div>
-
-              <div className="space-y-6">
-                {project.lessons.map((lesson, index) => (
-                  <div
-                    key={lesson}
-                    className="
-              flex
-              gap-5
-
-              rounded-3xl
-              border
-              border-white/10
-              bg-white/[0.03]
-              p-6
-            "
-                  >
-                    <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-orange-400" />
-
-                    <div>
-                      <span className="text-sm font-semibold text-orange-300">
-                        Lesson {index + 1}
-                      </span>
-
-                      <p className="mt-2 leading-8 text-zinc-300">{lesson}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Container>
-        </section>
-        
-        <section className="py-28">
-          <Container>
-            <div className="mx-auto max-w-3xl text-center">
-              <span className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-400">
-                Future Vision
-              </span>
-
-              <h2 className="mt-5 text-5xl font-bold tracking-tight text-white">
-                How I'd Continue Building This
-              </h2>
-
-              <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-zinc-400">
-                Shipping the first version is only the beginning. These are the
-                improvements and engineering initiatives I'd prioritize to make
-                the product more scalable, reliable and production-ready.
-              </p>
-            </div>
-
-            <div className="mt-20 grid gap-8 md:grid-cols-2">
-              {project.futureImprovements.map((item, index) => (
-                <div
-                  key={item.title}
+        <section className="mt-28 border-t border-white/10 pt-12">
+          <Container className="relative z-10">
+            <div className="grid gap-8 md:grid-cols-2">
+              {previous ? (
+                <Link
+                  href={`/projects/${previous.slug}`}
                   className="
             group
-
-            rounded-3xl
-
+            rounded-2xl
             border
             border-white/10
-
-            bg-white/[0.03]
-
+            bg-white/[0.02]
             p-8
-
             transition-all
             duration-300
-
             hover:border-orange-500/30
-            hover:bg-white/[0.05]
+            hover:bg-white/[0.04]
           "
                 >
-                  {/* Number */}
-
-                  <div
-                    className="
-              flex
-
-              h-12
-              w-12
-
-              items-center
-              justify-center
-
-              rounded-2xl
-
-              bg-orange-500/10
-
-              font-bold
-
-              text-orange-400
-            "
-                  >
-                    {String(index + 1).padStart(2, "0")}
+                  <div className="flex items-center gap-2 text-sm text-zinc-500">
+                    <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
+                    Previous Project
                   </div>
 
-                  {/* Title */}
-
-                  <h3 className="mt-8 text-2xl font-semibold text-white transition-colors group-hover:text-orange-300">
-                    {item.title}
+                  <h3 className="mt-6 text-2xl font-semibold leading-snug text-white transition-colors group-hover:text-orange-300">
+                    {previous.title}
                   </h3>
 
-                  {/* Description */}
-
-                  <p className="mt-5 leading-8 text-zinc-400">
-                    {item.description}
+                  <p className="mt-4 line-clamp-2 text-zinc-400">
+                    {previous.tagline ?? previous.description}
                   </p>
-                </div>
-              ))}
-            </div>
 
-            {/* Closing Card */}
+                  <div className="mt-6 flex items-center gap-3 text-sm text-zinc-500">
+                    <span>{previous.category}</span>
 
-            <div
-              className="
-        mt-16
+                    <span>•</span>
 
-        rounded-[32px]
+                    <span>{previous.readingTime}</span>
+                  </div>
+                </Link>
+              ) : (
+                <div />
+              )}
 
-        border
-        border-orange-500/20
+              {next ? (
+                <Link
+                  href={`/projects/${next.slug}`}
+                  className="
+            group
+            rounded-2xl
+            border
+            border-white/10
+            bg-white/[0.02]
+            p-8
+            text-right
+            transition-all
+            duration-300
+            hover:border-orange-500/30
+            hover:bg-white/[0.04]
+          "
+                >
+                  <div className="flex items-center justify-end gap-2 text-sm text-zinc-500">
+                    Next Project
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </div>
 
-        bg-gradient-to-br
-        from-orange-500/10
-        via-orange-500/5
-        to-transparent
+                  <h3 className="mt-6 text-2xl font-semibold leading-snug text-white transition-colors group-hover:text-orange-300">
+                    {next.title}
+                  </h3>
 
-        p-10
+                  <p className="mt-4 line-clamp-2 text-zinc-400">
+                    {next.tagline ?? next.description}
+                  </p>
 
-        text-center
-      "
-            >
-              <h3 className="text-2xl font-semibold text-white">
-                Building software is an iterative process.
-              </h3>
+                  <div className="mt-6 flex items-center justify-end gap-3 text-sm text-zinc-500">
+                    <span>{next.category}</span>
 
-              <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-zinc-300">
-                Every project highlights what was shipped today while
-                identifying opportunities for future growth. Thinking beyond the
-                MVP is an important part of building production-ready software
-                and continuously improving both the product and the engineering
-                behind it.
-              </p>
+                    <span>•</span>
+
+                    <span>{next.readingTime}</span>
+                  </div>
+                </Link>
+              ) : (
+                <div />
+              )}
             </div>
           </Container>
         </section>
 
         {relatedProjects.length > 0 && (
           <section className="py-28">
-            <Container>
+            <Container className="relative z-10">
               <div className="mx-auto max-w-3xl text-center">
                 <span className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-400">
                   Explore More
@@ -1362,9 +675,8 @@ export default async function ProjectPage({
 
               <div className="mt-20 space-y-8">
                 {relatedProjects.map((related) => (
-                  <Link
+                  <div
                     key={related.slug}
-                    href={`/projects/${related.slug}`}
                     className="
               group
               grid
@@ -1410,21 +722,23 @@ export default async function ProjectPage({
 
                     {/* Content */}
 
+                    {/* Content */}
+
                     <div>
                       <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-500">
                         <span
                           className="
-                    rounded-full
-                    border
-                    border-orange-500/20
-                    bg-orange-500/10
-                    px-3
-                    py-1
-                    text-xs
-                    uppercase
-                    tracking-wider
-                    text-orange-300
-                  "
+        rounded-full
+        border
+        border-orange-500/20
+        bg-orange-500/10
+        px-3
+        py-1
+        text-xs
+        uppercase
+        tracking-wider
+        text-orange-300
+      "
                         >
                           {related.category}
                         </span>
@@ -1436,19 +750,17 @@ export default async function ProjectPage({
 
                       <h3
                         className="
-                  mt-4
-                  text-2xl
-                  font-bold
-                  tracking-tight
-                  text-white
-                  transition-colors
-                  group-hover:text-orange-300
-                "
+      mt-4
+      text-2xl
+      font-bold
+      tracking-tight
+      text-white
+    "
                       >
                         {related.title}
                       </h3>
 
-                      <p className="mt-5 leading-8 text-zinc-400 line-clamp-2">
+                      <p className="mt-5 line-clamp-2 leading-8 text-zinc-400">
                         {related.tagline}
                       </p>
 
@@ -1457,39 +769,42 @@ export default async function ProjectPage({
                           <span
                             key={tech}
                             className="
-                      rounded-full
-                      border
-                      border-white/10
-                      bg-white/[0.03]
-                      px-3
-                      py-1
-                      text-xs
-                      text-zinc-400
-                    "
+          rounded-full
+          border
+          border-white/10
+          bg-white/[0.03]
+          px-3
+          py-1
+          text-xs
+          text-zinc-400
+        "
                           >
                             {tech}
                           </span>
                         ))}
                       </div>
 
-                      <div
-                        className="
-                  mt-8
-                  inline-flex
-                  items-center
-                  gap-2
-                  font-medium
-                  text-orange-400
-                  transition-all
-                  duration-300
-                  group-hover:gap-3
-                "
-                      >
-                        View Case Study
-                        <ArrowRight className="h-4 w-4" />
+                      <div className="mt-8">
+                        <Link
+                          href={`/projects/${related.slug}`}
+                          className="
+        inline-flex
+        items-center
+        gap-2
+        font-medium
+        text-orange-400
+        transition-all
+        duration-300
+        hover:gap-3
+        hover:text-orange-300
+      "
+                        >
+                          View Case Study
+                          <ArrowRight className="h-4 w-4" />
+                        </Link>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
             </Container>

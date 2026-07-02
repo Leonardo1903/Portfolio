@@ -17,6 +17,7 @@ import remarkGfm from "remark-gfm";
 import type { ComponentPropsWithoutRef } from "react";
 
 const BLOGS_DIR = path.join(process.cwd(), "src/data/blogs/posts");
+const PROJECTS_DIR = path.join(process.cwd(), "src/data/projects/case-studies");
 
 /* -------------------------------------------------------------------------- */
 /*                                   Types                                    */
@@ -494,6 +495,20 @@ export async function renderMDX(source: string) {
 
 export async function loadPostContent(slug: string) {
   const filePath = path.join(BLOGS_DIR, `${slug}.mdx`);
+
+  const file = await fs.readFile(filePath, "utf8");
+
+  const { content } = matter(file);
+
+  return content;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                            Project File Loader                             */
+/* -------------------------------------------------------------------------- */
+
+export async function loadProjectContent(slug: string) {
+  const filePath = path.join(PROJECTS_DIR, `${slug}.mdx`);
 
   const file = await fs.readFile(filePath, "utf8");
 

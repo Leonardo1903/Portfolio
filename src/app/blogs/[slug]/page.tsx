@@ -338,6 +338,7 @@ export default async function BlogPage({ params }: Props) {
           </div>
         </Container>
       </section>
+      
       <section className="mt-28 border-t border-white/10 pt-12">
         <Container>
           <div className="grid gap-8 md:grid-cols-2">
@@ -422,9 +423,10 @@ export default async function BlogPage({ params }: Props) {
           </div>
         </Container>
       </section>
-      <Container>
-        {relatedPosts.length > 0 && (
-          <section className="mt-32 border-t border-white/10 pt-20">
+
+      {relatedPosts.length > 0 && (
+        <section className="mt-32 border-t border-white/10 pt-20">
+          <Container>
             <div className="mb-14">
               <span className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-400">
                 Continue Reading
@@ -445,9 +447,8 @@ export default async function BlogPage({ params }: Props) {
                 const articleMeta = getArticleMetadata(article.slug);
 
                 return (
-                  <Link
+                  <div
                     key={article.slug}
-                    href={`/blogs/${article.slug}`}
                     className="
             group
             grid
@@ -551,7 +552,8 @@ export default async function BlogPage({ params }: Props) {
                         ))}
                       </div>
 
-                      <div
+                      <Link
+                        href={`/blogs/${article.slug}`}
                         className="
                 mt-7
                 inline-flex
@@ -566,15 +568,15 @@ export default async function BlogPage({ params }: Props) {
                       >
                         Continue Reading
                         <ArrowRight className="h-4 w-4" />
-                      </div>
+                      </Link>
                     </div>
-                  </Link>
+                  </div>
                 );
               })}
             </div>
-          </section>
-        )}
-      </Container>
+          </Container>
+        </section>
+      )}
 
       <section className="mt-28 border-t border-white/10 py-16">
         <Container className="max-w-3xl text-center">

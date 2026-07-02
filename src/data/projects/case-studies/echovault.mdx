@@ -1,0 +1,236 @@
+---
+title: EchoVault
+
+slug: echovault
+
+featured: false
+
+status: Production
+
+category: Web Development
+
+tagline: An anonymous feedback platform designed to encourage honest communication through AI-powered assistance.
+
+description: EchoVault is an anonymous feedback platform that enables individuals and teams to communicate openly in a safe environment through AI-assisted anonymous messaging.
+
+image: /projects/echovault.png
+
+github: https://github.com/Leonardo1903/EchoVault
+
+live: https://echovault.leonardo1903.me
+
+technologies:
+  - Next.js
+  - TypeScript
+  - TailwindCSS
+  - MongoDB
+  - Auth.js
+  - Google Gemini API
+
+published: 2026-07-01
+
+keywords:
+  - AI
+  - Anonymous Feedback
+  - Gemini
+  - Next.js
+  - MongoDB
+---
+
+# Overview
+
+EchoVault is an AI-powered anonymous feedback platform designed to encourage honest and constructive communication.
+
+The project explores how Artificial Intelligence can enhance conversations rather than replace them. Instead of allowing users to submit completely unstructured anonymous messages, EchoVault uses AI-generated suggestions to help users write respectful, meaningful and constructive feedback while preserving anonymity.
+
+The application combines secure authentication, anonymous messaging and generative AI into a single full-stack application focused on improving digital communication.
+
+---
+
+# The Problem
+
+People often avoid giving honest feedback because they fear judgment, confrontation or social consequences.
+
+Existing anonymous feedback platforms typically focus only on anonymity, offering little guidance for writing constructive messages. This often results in vague, unhelpful or even abusive communication.
+
+The primary challenges were:
+
+- Preserve complete anonymity for message senders.
+- Secure recipient authentication.
+- Improve message quality using AI.
+- Maintain a simple and intuitive user experience.
+- Build trust while balancing privacy and moderation.
+
+---
+
+# Goals
+
+The primary objectives for EchoVault were:
+
+- Enable anonymous messaging.
+- Build a clean and intuitive user interface.
+- Integrate AI-powered writing assistance.
+- Secure recipient accounts with authentication.
+- Deliver a responsive experience across devices.
+- Explore how AI can improve communication workflows.
+
+---
+
+# Solution
+
+EchoVault combines anonymous messaging with AI-generated writing suggestions.
+
+Recipients authenticate using Auth.js while anonymous users can submit messages without exposing their identity. Before sending a message, users may request AI-generated suggestions powered by Google Gemini, helping them express their thoughts more constructively.
+
+Rather than replacing human communication, AI acts as a writing assistant that encourages respectful conversations while keeping users in control of the final message.
+
+---
+
+# Key Features
+
+- Anonymous Messaging
+- AI Message Suggestions
+- Authentication
+- Personal Dashboard
+- Public Feedback Profile
+- Responsive Design
+
+---
+
+# Architecture
+
+The application follows a modern full-stack architecture using Next.js.
+
+```text
+                 ┌──────────────┐
+                 │    Client    │
+                 └──────┬───────┘
+                        │
+                 Next.js Application
+                ┌────────┼─────────┐
+                │        │         │
+            Auth.js   MongoDB   Gemini API
+          Authentication Database AI Suggestions
+```
+
+### Why this architecture?
+
+Each service focuses on a single responsibility.
+
+- Auth.js manages authentication.
+- MongoDB stores users and messages.
+- Gemini generates AI writing suggestions.
+- Next.js coordinates application logic.
+
+This separation keeps the system modular while simplifying future expansion.
+
+---
+
+# Technology Stack
+
+| Layer | Technologies |
+|--------|--------------|
+| Frontend | Next.js, React, TailwindCSS |
+| Backend | Next.js API Routes |
+| Database | MongoDB, Mongoose |
+| Authentication | Auth.js |
+| Artificial Intelligence | Google Gemini API |
+| Deployment | Vercel |
+
+---
+
+# Engineering Decisions
+
+## Why Next.js?
+
+Next.js provides a unified full-stack framework where frontend components, backend API routes and deployment coexist within a single application.
+
+This simplifies project organization while reducing development complexity.
+
+---
+
+## Why MongoDB?
+
+The application primarily stores users and anonymous messages with relatively flexible relationships.
+
+MongoDB provides schema flexibility while allowing rapid iteration during development.
+
+---
+
+## Why Auth.js?
+
+Authentication responsibilities are intentionally separated from anonymous messaging.
+
+Recipients authenticate securely while anonymous users can submit messages without exposing personal information.
+
+This separation preserves privacy without compromising account security.
+
+---
+
+## AI as an Assistant Instead of an Author
+
+Instead of allowing AI to automatically generate complete messages, EchoVault provides writing suggestions that users can modify before submission.
+
+This keeps users responsible for the final communication while using AI to improve clarity and tone.
+
+---
+
+# Challenges
+
+Building an anonymous communication platform introduced several unique engineering challenges.
+
+- Balancing anonymity with platform security.
+- Designing an intuitive messaging workflow.
+- Integrating AI without slowing the user experience.
+- Separating authentication from anonymous interactions.
+- Iterating on prompts to generate useful writing suggestions.
+
+---
+
+# Lessons Learned
+
+EchoVault reinforced several important product and engineering principles.
+
+- AI should enhance user workflows rather than replace user decisions.
+- Trust is a fundamental requirement for communication products.
+- Authentication and anonymity can coexist when responsibilities are clearly separated.
+- Prompt engineering requires continuous experimentation.
+- User experience has as much impact on product quality as technical implementation.
+
+---
+
+# Future Improvements
+
+## Conversation Threads
+
+Allow recipients to respond anonymously and organize conversations into threaded discussions while preserving user privacy.
+
+---
+
+## AI Sentiment & Toxicity Analysis
+
+Analyze incoming messages for sentiment and potentially harmful content, helping recipients prioritize feedback while maintaining a healthy communication environment.
+
+---
+
+## Custom AI Writing Personas
+
+Provide multiple writing styles such as professional, empathetic, constructive and concise, allowing users to tailor AI-generated suggestions for different situations.
+
+---
+
+## Content Moderation Pipeline
+
+Introduce automated moderation using AI and rule-based validation to detect spam, abusive language and malicious content before delivery.
+
+---
+
+## Team Workspaces
+
+Enable organizations to create private workspaces where employees can exchange anonymous feedback through structured access control and shared administration.
+
+---
+
+## Observability & AI Analytics
+
+Integrate OpenTelemetry, Prometheus and centralized logging to monitor API performance, AI response latency, message delivery metrics and overall platform health.

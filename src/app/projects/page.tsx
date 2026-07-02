@@ -1,16 +1,12 @@
 "use client";
-import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
 import { ExternalLink, Github, ArrowRight } from "lucide-react";
 import Image from "next/image";
-import {
-  getFeaturedProject,
-  getProjectCategories,
-  getProjectsByCategory,
-} from "@/lib/projects";
-import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
+
+import { getAllProjects, getFeaturedProject } from "@/lib/projects";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -34,15 +30,23 @@ export default function Page() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const featuredProject = getFeaturedProject();
 
-  const router = useRouter();
-
   if (!featuredProject) {
     return null;
   }
+  const projects = getAllProjects();
 
-  const projectCategories = getProjectCategories();
+  const projectCategories = useMemo(
+    () => ["All", ...new Set(projects.map((project) => project.category))],
+    [],
+  );
 
-  const filteredProjects = getProjectsByCategory(selectedCategory);
+  const filteredProjects = useMemo(() => {
+    if (selectedCategory === "All") {
+      return projects;
+    }
+
+    return projects.filter((project) => project.category === selectedCategory);
+  }, [selectedCategory]);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#09090C]">
@@ -318,7 +322,7 @@ export default function Page() {
               text-zinc-400
             "
                 >
-                  {featuredProject.overview}
+                  {featuredProject.description}
                 </p>
 
                 {/* Technologies */}
@@ -356,10 +360,8 @@ export default function Page() {
                 {/* ========================================================== */}
 
                 <div className="mt-12 flex flex-wrap gap-4">
-                  <motion.article
-                    onClick={() =>
-                      router.push(`/projects/${featuredProject.slug}`)
-                    }
+                  <Link
+                    href={`/projects/${featuredProject.slug}`}
                     className="
                 inline-flex
                 items-center
@@ -385,7 +387,7 @@ export default function Page() {
                   >
                     View Case Study
                     <ArrowRight className="h-4 w-4" />
-                  </motion.article>
+                  </Link>
 
                   {featuredProject.github && (
                     <Link
@@ -741,8 +743,7 @@ export default function Page() {
                   transition={{ duration: 0.25 }}
                 >
                   <motion.article
-                    layout
-                    onClick={() => router.push(`/projects/${project.slug}`)}
+                    
                     className="
     group
     grid
@@ -884,7 +885,8 @@ export default function Page() {
                         ))}
                       </div>
                       <div className="mt-8 flex flex-wrap items-center gap-6">
-                        <div
+                        <Link
+                        href={`/projects/${project.slug}`}
                           className="
               inline-flex
 
@@ -904,7 +906,7 @@ export default function Page() {
                         >
                           View Case Study
                           <ArrowRight className="h-4 w-4" />
-                        </div>
+                        </Link>
 
                         {project.github && (
                           <Link
